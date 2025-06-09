@@ -1,4 +1,5 @@
 // src/components/AuthForm.tsx
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase'; // Supabaseクライアントをインポート
 import { useRouter } from 'next/router';
@@ -123,16 +124,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp }) => {
           {isSignUp ? (
             <p className="text-sm text-gray-600">
               アカウントをお持ちですか？{' '}
-              <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
                 ログインはこちら
-              </a>
+              </Link>
             </p>
           ) : (
             <p className="text-sm text-gray-600">
               アカウントをお持ちではありませんか？{' '}
-              <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
                 サインアップはこちら
-              </a>
+              </Link>
             </p>
           )}
         </div>
