@@ -60,8 +60,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp }) => {
           router.push('/profile/create');
         }
       }
-    } catch (error: any) {
-      setMessage(`予期せぬエラー: ${error.message}`);
+    } catch (error) { // 型注釈を削除するか、明示的に unknown にする
+      // エラーが Error オブジェクトであることを確認する
+      if (error instanceof Error) {
+        setMessage(`予期せぬエラー: ${error.message}`);
+      } else {
+        // Error オブジェクトでない場合（例えば文字列など）
+        setMessage(`予期せぬエラー: ${String(error)}`);
+      }
     } finally {
       setLoading(false);
     }
