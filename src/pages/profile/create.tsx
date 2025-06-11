@@ -14,13 +14,12 @@ const CreateProfilePage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initialProfileData, setInitialProfileData] = useState<Omit<User, 'id' | 'email' > | undefined>(undefined); 
-  const [isFetchingInitialData, setIsFetchingInitialData] = useState(true);
 
   // 既存のプロフィールデータを取得
   useEffect(() => {
     const fetchExistingProfile = async () => {
       if (!user) {
-        setIsFetchingInitialData(false);
+        setInitialProfileData(undefined);
         return;
       }
 
@@ -41,7 +40,7 @@ const CreateProfilePage: React.FC = () => {
             region: data.region,
             bio: data.bio});
         }
-        setIsFetchingInitialData(false);
+        setInitialProfileData(undefined);
       };
   
       if (!loading && user) {
