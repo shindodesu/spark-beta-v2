@@ -36,7 +36,7 @@ const CreateProfilePage: React.FC = () => {
             nickname: data.name, // name -> nickname
             real_name: data.real_name,
             part: data.part,
-            experience_years: data.experience_years,
+            experienceYears: data.experience_years,
             region: data.region,
             bio: data.bio});
         }
@@ -71,7 +71,7 @@ const CreateProfilePage: React.FC = () => {
             real_name: profileData.real_name,
             part: profileData.part,
             region: profileData.region,
-            experience_years: profileData.experience_years,
+            experience_years: profileData.experienceYears,
             bio: profileData.bio,
             email: user.email, // email も users テーブルに保存する場合
           },

@@ -1,6 +1,7 @@
 // types/index.ts
 export interface User {
     id: string; // Supabase auth.users の id と同じ
+    email : string;
     nickname: string;
     part: string[];
     region: string;
