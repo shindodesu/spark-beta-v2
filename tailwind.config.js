@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  important : true,
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx}', // src/pages 以下のすべてのJS/TS/JSX/TSXファイルをスキャン
     './src/components/**/*.{js,ts,jsx,tsx}', // src/components 以下のすべてのJS/TS/JSX/TSXファイルをスキャン
