@@ -4,12 +4,12 @@ import { supabase } from '../../../lib/supabase'; // Supabaseクライアント�
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Supabase からリダイレクトされた URL からコードとステートを取得
-  const { code, state } = req.query;
+  const { code } = req.query;
 
   if (code) {
     try {
       // Supabase にコードを渡してセッションを交換
-      const { data, error } = await supabase.auth.exchangeCodeForSession(String(code));
+      const { error } = await supabase.auth.exchangeCodeForSession(String(code));
 
       if (error) {
         console.error('Error exchanging code for session:', error.message);
