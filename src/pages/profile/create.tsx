@@ -28,7 +28,7 @@ const CreateProfilePage: React.FC = () => {
       }
 
       // SupabaseのupdateUserを使ってuser_metadataを更新
-      const { data : _data, error: updateError } = await supabase.auth.updateUser({
+      const { error: updateError } = await supabase.auth.updateUser({
         data: profileData, // ここで user_metadata が更新される
       });
 
