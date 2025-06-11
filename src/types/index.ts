@@ -5,7 +5,7 @@ export interface User {
     nickname: string;
     part: string[];
     region: string;
-    experienceYears: number;
+    experience_years: number;
     real_name: string;
     bio: string;
   }
