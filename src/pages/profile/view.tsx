@@ -43,7 +43,7 @@ const ViewProfilePage: React.FC = () => {
             real_name: data.real_name,
             email: data.email,
             part: data.part,
-            experience_Years: data.experience_years,
+            experience_years: data.experience_years,
             region: data.region,
             bio: data.bio,
           });
@@ -123,7 +123,7 @@ const ViewProfilePage: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">経験年数:</p>
-              <p className="text-lg text-gray-900">{profileData.experience_Years}年</p>
+              <p className="text-lg text-gray-900">{profileData.experience_years}年</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">自己紹介:</p>
