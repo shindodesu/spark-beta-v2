@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase'; // Supabaseクライアントを�
 import { useAuth } from '../../lib/hooks'; // 認証状態管理フックをインポート
 import ProtectedRoute from '../../components/ProtectedRoute'; // 認証済みルート保護
 import ProfileForm from '../../components/ProfileForm'; // プロフィールフォームコンポーネント
+import { UserProfile } from '../../types'; // UserProfile 型をインポート
 
 const CreateProfilePage: React.FC = () => {
   const { user, loading } = useAuth();
@@ -15,7 +16,7 @@ const CreateProfilePage: React.FC = () => {
 
   // 認証状態の確認は ProtectedRoute で行われるため、ここではロジックを簡素化
 
-  const handleProfileSubmit = async (profileData: any) => { // user_metadataはany型になりがち
+  const handleProfileSubmit = async (profileData: UserProfile) => { // user_metadataはany型になりがち
     setIsSubmitting(true);
     setError(null);
 
@@ -27,7 +28,7 @@ const CreateProfilePage: React.FC = () => {
       }
 
       // SupabaseのupdateUserを使ってuser_metadataを更新
-      const { data, error: updateError } = await supabase.auth.updateUser({
+      const { data : _data, error: updateError } = await supabase.auth.updateUser({
         data: profileData, // ここで user_metadata が更新される
       });
 
@@ -37,8 +38,12 @@ const CreateProfilePage: React.FC = () => {
         alert('プロフィールが正常に保存されました！');
         router.push('/profile/view'); // プロフィール確認ページへ遷移
       }
-    } catch (err: any) {
-      setError(`予期せぬエラーが発生しました: ${err.message}`);
+    } catch (err: unknown) { // 'any' を 'unknown' に修正
+      if (err instanceof Error) {
+        setError(`予期せぬエラーが発生しました: ${err.message}`);
+      } else {
+        setError(`予期せぬエラーが発生しました: ${String(err)}`);
+      }
     } finally {
       setIsSubmitting(false);
     }

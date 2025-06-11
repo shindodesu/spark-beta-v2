@@ -1,7 +1,6 @@
 // src/components/ProfileForm.tsx
 import React, { useState, useEffect } from 'react';
 import { UserProfile } from '../types'; // 型をインポート
-import { supabase } from '../lib/supabase'; // Supabaseクライアントをインポート
 
 interface ProfileFormProps {
   initialData?: UserProfile; // 初期表示データ（既存プロフィールの編集用）

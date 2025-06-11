@@ -1,7 +1,6 @@
 // src/pages/profile/view.tsx
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase'; // Supabaseクライアントをインポート
 import { useAuth } from '../../lib/hooks'; // 認証状態管理フックをインポート
 import ProtectedRoute from '../../components/ProtectedRoute'; // 認証済みルート保護
@@ -10,7 +9,6 @@ import Link from 'next/link'; // Linkコンポーネントをインポート
 
 const ViewProfilePage: React.FC = () => {
   const { user, loading } = useAuth();
-  const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
