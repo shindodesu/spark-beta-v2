@@ -27,7 +27,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
   const [realName, setRealName] = useState(initialData?.real_name || '');
   const [selectedParts, setSelectedParts] = useState<string[]>(initialData?.part || []);
   const [region, setRegion] = useState(initialData?.region || '');
-  const [experienceYears, setExperienceYears] = useState(initialData?.experience_Years || 0);
+  const [experienceYears, setExperienceYears] = useState(initialData?.experience_years || 0);
   const [bio, setBio] = useState(initialData?.bio || '');
 
   // initialDataが更新された場合にフォームの状態をリセット
@@ -37,7 +37,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
       setNickname(initialData.nickname);
       setSelectedParts(initialData.part);
       setRegion(initialData.region);
-      setExperienceYears(initialData.experience_Years);
+      setExperienceYears(initialData.experience_years);
       setBio(initialData.bio || '');
     }
   }, [initialData]);
@@ -51,7 +51,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ real_name : realName, nickname, part: selectedParts, region, experience_Years : experienceYears , bio });
+    await onSubmit({ real_name : realName, nickname, part: selectedParts, region, experience_years : experienceYears , bio });
   };
 
   return (
