@@ -27,7 +27,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
   const [realName, setRealName] = useState(initialData?.real_name || '');
   const [selectedParts, setSelectedParts] = useState<string[]>(initialData?.part || []);
   const [region, setRegion] = useState(initialData?.region || '');
-  const [experienceYears, setExperienceYears] = useState(initialData?.experiencYears || 0);
+  const [experienceYears, setExperienceYears] = useState(initialData?.experienceYears || 0);
   const [bio, setBio] = useState(initialData?.bio || '');
 
   // initialDataが更新された場合にフォームの状態をリセット
