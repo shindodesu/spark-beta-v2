@@ -1,10 +1,12 @@
 // src/pages/index.tsx
 import Head from 'next/head';
 import Link from 'next/link';
+import Layout from '../components/Layout'; // Layout コンポーネントをインポート
+
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+    <Layout> {/* ここで Layout でラップ */}
       <Head>
         <title>Spark β</title>
         <meta name="description" content="アカペラのバンドマッチングプラットフォーム Spark β" />
@@ -27,7 +29,7 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
       </main>
-    </div>
+    </Layout>
   );
 };
 
