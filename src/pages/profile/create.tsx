@@ -1,22 +1,57 @@
 // src/pages/profile/create.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase'; // Supabaseクライアントをインポート
 import { useAuth } from '../../lib/hooks'; // 認証状態管理フックをインポート
 import ProtectedRoute from '../../components/ProtectedRoute'; // 認証済みルート保護
 import ProfileForm from '../../components/ProfileForm'; // プロフィールフォームコンポーネント
-import { UserProfile } from '../../types'; // UserProfile 型をインポート
+import { User } from '../../types'; // UserProfile 型をインポート
 
 const CreateProfilePage: React.FC = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [initialProfileData, setInitialProfileData] = useState<Omit<User, 'id' | 'email' > | undefined>(undefined); 
+  const [isFetchingInitialData, setIsFetchingInitialData] = useState(true);
+
+  // 既存のプロフィールデータを取得
+  useEffect(() => {
+    const fetchExistingProfile = async () => {
+      if (!user) {
+        setIsFetchingInitialData(false);
+        return;
+      }
+
+      const { data, error: fetchError } = await supabase
+        .from('users')
+        .select('name, real_name, part, experience_years, region, bio')
+        .eq('id', user.id)
+        .single();
+
+        if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116は「見つからなかった」エラー
+          setError(`プロフィールの取得に失敗しました: ${fetchError.message}`);
+        } else if (data) {
+          setInitialProfileData({
+            nickname: data.name, // name -> nickname
+            real_name: data.real_name,
+            part: data.part,
+            experience_Years: data.experience_years,
+            region: data.region,
+            bio: data.bio});
+        }
+        setIsFetchingInitialData(false);
+      };
+  
+      if (!loading && user) {
+        fetchExistingProfile();
+      }
+    }, [user, loading]);
 
   // 認証状態の確認は ProtectedRoute で行われるため、ここではロジックを簡素化
 
-  const handleProfileSubmit = async (profileData: UserProfile) => { // user_metadataはany型になりがち
+  const handleProfileSubmit = async (profileData: Omit<User, 'id' | 'email'>) => { // 引数型を修正
     setIsSubmitting(true);
     setError(null);
 
@@ -27,27 +62,40 @@ const CreateProfilePage: React.FC = () => {
         return;
       }
 
-      // SupabaseのupdateUserを使ってuser_metadataを更新
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: profileData, // ここで user_metadata が更新される
-      });
+      // public.users テーブルを更新または挿入 (upsert)
+      const { error: upsertError } = await supabase
+        .from('users')
+        .upsert(
+          {
+            id: user.id, // user_id を追加
+            name: profileData.nickname, // public.users の name カラムに対応
+            real_name: profileData.real_name,
+            part: profileData.part,
+            region: profileData.region,
+            experience_years: profileData.experience_Years,
+            bio: profileData.bio,
+            email: user.email, // email も users テーブルに保存する場合
+          },
+          { onConflict: 'id' } // id が競合したら更新
+        )
+        .select(); // 更新後のデータを取得
 
-      if (updateError) {
-        setError(`プロフィールの保存に失敗しました: ${updateError.message}`);
-      } else {
-        alert('プロフィールが正常に保存されました！');
-        router.push('/profile/view'); // プロフィール確認ページへ遷移
+        if (upsertError) {
+          setError(`プロフィールの保存に失敗しました: ${upsertError.message}`);
+        } else {
+          alert('プロフィールが正常に保存されました！');
+          router.push('/profile/view'); // プロフィール確認ページへ遷移
+        }
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(`予期せぬエラーが発生しました: ${err.message}`);
+        } else {
+          setError(`予期せぬエラーが発生しました: ${String(err)}`);
+        }
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (err: unknown) { // 'any' を 'unknown' に修正
-      if (err instanceof Error) {
-        setError(`予期せぬエラーが発生しました: ${err.message}`);
-      } else {
-        setError(`予期せぬエラーが発生しました: ${String(err)}`);
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    };
 
   // ローディング中は何も表示しないか、ローディングスピナーを表示
   if (loading) {
@@ -63,7 +111,7 @@ const CreateProfilePage: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <ProfileForm onSubmit={handleProfileSubmit} isSubmitting={isSubmitting} error={error} />
+        <ProfileForm initialData={initialProfileData} onSubmit={handleProfileSubmit} isSubmitting={isSubmitting} error={error} />
       </div>
     </ProtectedRoute>
   );

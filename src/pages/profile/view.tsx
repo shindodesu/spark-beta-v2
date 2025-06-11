@@ -4,12 +4,12 @@ import Head from 'next/head';
 import { supabase } from '../../lib/supabase'; // Supabaseクライアントをインポート
 import { useAuth } from '../../lib/hooks'; // 認証状態管理フックをインポート
 import ProtectedRoute from '../../components/ProtectedRoute'; // 認証済みルート保護
-import { UserProfile } from '../../types'; // UserProfile 型をインポート
+import { User } from '../../types'; // UserProfile 型をインポート
 import Link from 'next/link'; // Linkコンポーネントをインポート
 
 const ViewProfilePage: React.FC = () => {
   const { user, loading } = useAuth();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profileData, setProfileData] = useState<User | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,23 +19,38 @@ const ViewProfilePage: React.FC = () => {
         return;
       }
 
-      // Supabaseから現在のユーザー情報を取得
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+      // public.users テーブルからすべてのプロフィール情報を取得
+      const { data, error: userError } = await supabase
+        .from('users')
+        .select('id, name, real_name, email, part, experience_years, region, bio') // すべてのカラムを選択
+        .eq('id', user.id)
+        .single();
 
-      if (userError) {
-        setFetchError(`プロフィールの取得に失敗しました: ${userError.message}`);
-        return;
-      }
 
-      if (userData?.user?.user_metadata) {
-        // user_metadataからプロフィール情報を抽出
-        const userProfile = userData.user.user_metadata as UserProfile;
-        setProfile(userProfile);
-      } else {
-        // プロフィール情報がまだuser_metadataにない場合
-        setFetchError('プロフィール情報が見つかりません。作成してください。');
-      }
-    };
+        if (userError) {
+          if (userError.code === 'PGRST116') { // 行が見つからなかった場合
+            setFetchError('プロフィール情報が見つかりません。作成してください。');
+          } else {
+            setFetchError(`プロフィールの取得に失敗しました: ${userError.message}`);
+          }
+          return;
+        }
+
+        if (data) {
+          setProfileData({
+            id: data.id,
+            nickname: data.name, // DBの 'name' を 'nickname' にマッピング
+            real_name: data.real_name,
+            email: data.email,
+            part: data.part,
+            experience_Years: data.experience_years,
+            region: data.region,
+            bio: data.bio,
+          });
+        } else {
+          setFetchError('プロフィール情報が見つかりません。作成してください。');
+        }
+      };
 
     fetchProfile();
   }, [user, loading]); // userまたはloadingの状態が変化したら再実行
@@ -69,7 +84,7 @@ const ViewProfilePage: React.FC = () => {
     );
   }
 
-  if (!profile) {
+  if (!profileData) {
     return (
       <ProtectedRoute>
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -92,19 +107,27 @@ const ViewProfilePage: React.FC = () => {
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium text-gray-700">あだ名:</p>
-              <p className="text-lg text-gray-900">{profile.nickname}</p>
+              <p className="text-lg text-gray-900">{profileData.nickname || '未設定'}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-700">本名:</p>
+              <p className="text-lg text-gray-900">{profileData.real_name || '未設定'}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">パート:</p>
-              <p className="text-lg text-gray-900">{profile.part.join(', ') || '未設定'}</p>
+              <p className="text-lg text-gray-900">{profileData.part?.join(', ') || '未設定'}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">地域:</p>
-              <p className="text-lg text-gray-900">{profile.region || '未設定'}</p>
+              <p className="text-lg text-gray-900">{profileData.region || '未設定'}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">経験年数:</p>
-              <p className="text-lg text-gray-900">{profile.experienceYears}年</p>
+              <p className="text-lg text-gray-900">{profileData.experience_Years}年</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-700">自己紹介:</p>
+              <p className="text-lg text-gray-900">{profileData.bio || '未設定'}</p>
             </div>
           </div>
           <div className="mt-6 text-center">

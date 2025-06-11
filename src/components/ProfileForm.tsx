@@ -1,15 +1,17 @@
 // src/components/ProfileForm.tsx
 import React, { useState, useEffect } from 'react';
-import { UserProfile } from '../types'; // 型をインポート
+import { User } from '../types'; // 型をインポート
+
+type ProfileFormData = Omit<User, 'id' | 'email'>;
 
 interface ProfileFormProps {
-  initialData?: UserProfile; // 初期表示データ（既存プロフィールの編集用）
-  onSubmit: (data: UserProfile) => Promise<void>; // フォーム送信時のハンドラ
+  initialData?: ProfileFormData ; // 初期表示データ（既存プロフィールの編集用）
+  onSubmit: (data: ProfileFormData ) => Promise<void>; // idとemailはフォームから入力されない
   isSubmitting: boolean; // フォーム送信中フラグ
   error: string | null; // エラーメッセージ
 }
 
-const PARTS = ['Soprano', 'Alto', 'Tenor', 'Baritone', 'Bass','Vocal_Perc.'];
+const PARTS = ['Soprano', 'Alto', 'Tenor', 'Baritone', 'Bass','Vocal_Percussion'];
 const REGIONS = [
   '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
   '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
@@ -17,22 +19,26 @@ const REGIONS = [
   '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県',
   '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県',
   '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県',
-  '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'
+  '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県', 'その他'
 ];
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubmitting, error }) => {
   const [nickname, setNickname] = useState(initialData?.nickname || '');
+  const [realName, setRealName] = useState(initialData?.real_name || '');
   const [selectedParts, setSelectedParts] = useState<string[]>(initialData?.part || []);
   const [region, setRegion] = useState(initialData?.region || '');
-  const [experienceYears, setExperienceYears] = useState(initialData?.experienceYears || 0);
+  const [experienceYears, setExperienceYears] = useState(initialData?.experience_Years || 0);
+  const [bio, setBio] = useState(initialData?.bio || '');
 
   // initialDataが更新された場合にフォームの状態をリセット
   useEffect(() => {
     if (initialData) {
+      setRealName(initialData.real_name || '');
       setNickname(initialData.nickname);
       setSelectedParts(initialData.part);
       setRegion(initialData.region);
-      setExperienceYears(initialData.experienceYears);
+      setExperienceYears(initialData.experience_Years);
+      setBio(initialData.bio || '');
     }
   }, [initialData]);
 
@@ -45,7 +51,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ nickname, part: selectedParts, region, experienceYears });
+    await onSubmit({ real_name : realName, nickname, part: selectedParts, region, experience_Years : experienceYears , bio });
   };
 
   return (
@@ -55,7 +61,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
         {/* あだ名 */}
         <div>
           <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
-            あだ名
+            あだ名(公開)
           </label>
           <input
             type="text"
@@ -66,7 +72,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
             required
           />
         </div>
-
+        {/* 本名 */}
+        <div>
+          <label htmlFor="real_name" className="block text-sm font-medium text-gray-700">
+            本名(非公開)
+          </label>
+          <input
+            type="text"
+            id="real_name"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            value={realName}
+            onChange={(e) => setRealName(e.target.value)}
+            required
+          />
+        </div>
         {/* パート（選択式） */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -110,7 +129,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
         {/* 経験年数 */}
         <div>
           <label htmlFor="experienceYears" className="block text-sm font-medium text-gray-700">
-            経験年数
+            経験年数(何年目か)
           </label>
           <input
             type="number"
@@ -120,6 +139,19 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
             onChange={(e) => setExperienceYears(parseInt(e.target.value) || 0)}
             min="0"
             required
+          />
+        </div>
+        {/* 自己紹介 */}
+        <div>
+          <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
+            自己紹介
+          </label>
+          <textarea
+            id="bio"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={3}
           />
         </div>
 
