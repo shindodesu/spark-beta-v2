@@ -11,6 +11,8 @@ export default function Document() {
         {/* モダンブラウザ用のSVGアイコン (推奨) */}
         <link rel="icon" href="/spark-beta-logo.png" type="image/svg+xml" />
 
+        
+
         {/* 必要であれば、その他のメタタグやフォントなどもここに追加できます */}
         {/* <meta name="description" content="Spark β - アカペラシャッフルバンドマッチング" /> */}
       </Head>

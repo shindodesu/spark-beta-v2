@@ -1,8 +1,8 @@
-// src/pages/login.tsx
-import React from 'react';
-import AuthForm from '../components/AuthForm';
-import Head from 'next/head';
-import Layout from '../components/Layout'; // Layout コンポーネントをインポート
+// pages/login.tsx
+import React from 'react'
+import Head from 'next/head'
+import Layout from '../components/Layout'
+import AuthForm from '../components/AuthForm'
 
 const LoginPage: React.FC = () => {
   return (
@@ -10,11 +10,18 @@ const LoginPage: React.FC = () => {
       <Head>
         <title>Spark β - ログイン</title>
         <meta name="description" content="Spark βにログインしてシャッフルバンドを始めよう！" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/spark-beta-logo.png" />
       </Head>
-      <AuthForm isSignUp={false} />
-    </Layout>
-  );
-};
 
-export default LoginPage;
+      <div className="flex justify-center items-center py-12">
+        <div className="text-center text-white mb-6">
+          <h1 className="text-3xl font-bold drop-shadow-md mb-2">おかえりなさい！</h1>
+          <p className="text-white/80 text-sm">もう一度Sparkしよう。</p>
+        </div>
+        <AuthForm isSignUp={false} />
+      </div>
+    </Layout>
+  )
+}
+
+export default LoginPage

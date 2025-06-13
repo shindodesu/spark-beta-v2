@@ -1,48 +1,55 @@
-// src/components/Layout.tsx
-import React, { ReactNode } from 'react';
-import Link from 'next/link';
+// components/Layout.tsx
+import React, { ReactNode } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 
 interface LayoutProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#1e3c72] to-[#2a5298] text-white font-sans">
       {/* ヘッダー */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <nav className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold hover:text-blue-200">
-            Spark β
+      <header className="backdrop-blur-md bg-white/10 sticky top-0 z-50 shadow-md">
+        <nav className="container mx-auto flex justify-between items-center py-4 px-6">
+          <Link href="/" className="flex items-center space-x-3">
+            <Image
+              src="/spark-beta-logo.png"
+              alt="Spark β ロゴ"
+              width={40}
+              height={40}
+              className="rounded-full shadow"
+            />
+            <span className="text-2xl font-extrabold tracking-wide drop-shadow-sm hover:text-pink-300 transition">
+              Spark β
+            </span>
           </Link>
-          <div>
-            <Link href="/profile/view" className="ml-4 hover:text-blue-200">
+          <div className="space-x-6 text-sm font-medium">
+            <Link href="/profile/view" className="hover:text-pink-300 transition">
               プロフィール
             </Link>
-            <Link href="/login" className="ml-4 hover:text-blue-200">
+            <Link href="/login" className="hover:text-pink-300 transition">
               ログイン
             </Link>
-            <Link href="/signup" className="ml-4 hover:text-blue-200">
+            <Link href="/signup" className="hover:text-pink-300 transition">
               サインアップ
             </Link>
-            {/* 将来的にログアウトボタンなどを追加 */}
           </div>
         </nav>
       </header>
 
       {/* メインコンテンツ */}
-      <main className="flex-grow container mx-auto p-4">
+      <main className="flex-grow container mx-auto px-4 py-8">
         {children}
       </main>
 
       {/* フッター */}
-      <footer className="bg-gray-800 text-white p-4 text-center">
-        <div className="container mx-auto text-sm">
-          &copy; {new Date().getFullYear()} Spark β. All rights reserved.
-        </div>
+      <footer className="bg-white/10 backdrop-blur-md text-white text-center py-4 text-sm">
+        &copy; {new Date().getFullYear()} Spark β — All rights reserved.
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout
