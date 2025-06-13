@@ -1,97 +1,79 @@
-// src/pages/profile/view.tsx
-import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
-import { supabase } from '../../lib/supabase'; // Supabaseクライアントをインポート
-import { useAuth } from '../../lib/hooks'; // 認証状態管理フックをインポート
-import ProtectedRoute from '../../components/ProtectedRoute'; // 認証済みルート保護
-import { User } from '../../types'; // UserProfile 型をインポート
-import Link from 'next/link'; // Linkコンポーネントをインポート
+// pages/profile/view.tsx
+import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
+import { supabase } from '../../lib/supabase'
+import { useAuth } from '../../lib/hooks'
+import ProtectedRoute from '../../components/ProtectedRoute'
+import { User } from '../../types'
+import Link from 'next/link'
 
 const ViewProfilePage: React.FC = () => {
-  const { user, loading } = useAuth();
-  const [profileData, setProfileData] = useState<User | null>(null);
-  const [fetchError, setFetchError] = useState<string | null>(null);
+  const { user, loading } = useAuth()
+  const [profileData, setProfileData] = useState<User | null>(null)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (loading || !user) {
-        // userがロード中または存在しない場合は何もしない
-        return;
+      if (loading || !user) return
+
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, name, real_name, email, part, experience_years, region, bio')
+        .eq('id', user.id)
+        .single()
+
+      if (error) {
+        setFetchError(
+          error.code === 'PGRST116'
+            ? 'プロフィール情報が見つかりません。作成してください。'
+            : `プロフィールの取得に失敗しました: ${error.message}`
+        )
+        return
       }
 
-      // public.users テーブルからすべてのプロフィール情報を取得
-      const { data, error: userError } = await supabase
-        .from('users')
-        .select('id, name, real_name, email, part, experience_years, region, bio') // すべてのカラムを選択
-        .eq('id', user.id)
-        .single();
+      if (data) {
+        setProfileData({
+          id: data.id,
+          nickname: data.name,
+          real_name: data.real_name,
+          email: data.email,
+          part: data.part,
+          experience_years: data.experience_years,
+          region: data.region,
+          bio: data.bio,
+        })
+      }
+    }
 
+    fetchProfile()
+  }, [user, loading])
 
-        if (userError) {
-          if (userError.code === 'PGRST116') { // 行が見つからなかった場合
-            setFetchError('プロフィール情報が見つかりません。作成してください。');
-          } else {
-            setFetchError(`プロフィールの取得に失敗しました: ${userError.message}`);
-          }
-          return;
-        }
-
-        if (data) {
-          setProfileData({
-            id: data.id,
-            nickname: data.name, // DBの 'name' を 'nickname' にマッピング
-            real_name: data.real_name,
-            email: data.email,
-            part: data.part,
-            experience_years: data.experience_years,
-            region: data.region,
-            bio: data.bio,
-          });
-        } else {
-          setFetchError('プロフィール情報が見つかりません。作成してください。');
-        }
-      };
-
-    fetchProfile();
-  }, [user, loading]); // userまたはloadingの状態が変化したら再実行
-
-  // ローディング中の表示
-  if (loading) {
-    return <p>Loading authentication state...</p>;
-  }
-
-  // 認証されていない場合はProtectedRouteがリダイレクトを処理
-  // ここに到達した場合は認証済み
+  if (loading) return <p>認証状態を確認中...</p>
 
   if (fetchError) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-          <div className="p-8 bg-white rounded shadow-md text-center">
-            <h2 className="text-2xl font-bold mb-4 text-red-600">エラー</h2>
-            <p className="text-gray-700 mb-4">{fetchError}</p>
-            {fetchError.includes('見つかりません') && (
-              <Link href="/profile/create" className="text-blue-600 hover:underline">
-                プロフィールを作成する
-              </Link>
-            )}
-            <Link href="/login" className="block text-blue-600 hover:underline mt-2">
-                ログインページに戻る
-              </Link>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1e3c72] to-[#2a5298] text-white px-6">
+          <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-lg text-center max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">エラー</h2>
+            <p className="mb-4">{fetchError}</p>
+            <Link href="/profile/create" className="text-pink-300 hover:underline">
+              プロフィールを作成する
+            </Link>
           </div>
         </div>
       </ProtectedRoute>
-    );
+    )
   }
 
   if (!profileData) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center text-white">
           <p>プロフィール情報を読み込み中...</p>
         </div>
       </ProtectedRoute>
-    );
+    )
   }
 
   return (
@@ -99,46 +81,31 @@ const ViewProfilePage: React.FC = () => {
       <Head>
         <title>Spark β - プロフィール確認</title>
         <meta name="description" content="プロフィール確認ページ" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/spark-beta-logo.png" />
       </Head>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="p-8 bg-white rounded shadow-md w-full max-w-md mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center">プロフィール</h2>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium text-gray-700">あだ名:</p>
-              <p className="text-lg text-gray-900">{profileData.nickname || '未設定'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-700">本名:</p>
-              <p className="text-lg text-gray-900">{profileData.real_name || '未設定'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-700">パート:</p>
-              <p className="text-lg text-gray-900">{profileData.part?.join(', ') || '未設定'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-700">地域:</p>
-              <p className="text-lg text-gray-900">{profileData.region || '未設定'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-700">経験年数:</p>
-              <p className="text-lg text-gray-900">{profileData.experience_years}年</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-700">自己紹介:</p>
-              <p className="text-lg text-gray-900">{profileData.bio || '未設定'}</p>
-            </div>
+      <div className="min-h-screen bg-gradient-to-br from-[#1e3c72] to-[#2a5298] flex items-center justify-center px-4 py-10">
+        <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-xl text-white w-full max-w-lg">
+          <h2 className="text-2xl font-bold mb-6 text-center drop-shadow-sm">あなたのプロフィール</h2>
+          <div className="space-y-4 text-white/90">
+            <p><strong>あだ名：</strong>{profileData.nickname}</p>
+            <p><strong>本名：</strong>{profileData.real_name}</p>
+            <p><strong>パート：</strong>{profileData.part?.join(', ')}</p>
+            <p><strong>地域：</strong>{profileData.region}</p>
+            <p><strong>経験年数：</strong>{profileData.experience_years}年</p>
+            <p><strong>自己紹介：</strong>{profileData.bio}</p>
           </div>
           <div className="mt-6 text-center">
-            <Link href="/profile/create" className="inline-block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-              プロフィールを編集する
+            <Link
+              href="/profile/create"
+              className="inline-block bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 hover:brightness-110 text-white py-2 px-4 rounded shadow transition"
+            >
+              編集する
             </Link>
           </div>
         </div>
       </div>
     </ProtectedRoute>
-  );
-};
+  )
+}
 
-export default ViewProfilePage;
+export default ViewProfilePage

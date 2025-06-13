@@ -1,20 +1,27 @@
-// src/pages/signup.tsx
-import React from 'react';
-import AuthForm from '../components/AuthForm';
-import Head from 'next/head';
-import Layout from '../components/Layout'; // Layout コンポーネントをインポート
+// pages/signup.tsx
+import React from 'react'
+import Head from 'next/head'
+import Layout from '../components/Layout'
+import AuthForm from '../components/AuthForm'
 
 const SignUpPage: React.FC = () => {
   return (
-    <Layout> {/* ここで Layout でラップ */}
+    <Layout>
       <Head>
         <title>Spark β - サインアップ</title>
         <meta name="description" content="Spark βでシャッフルバンドを始めよう！" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/spark-beta-logo.png" />
       </Head>
-      <AuthForm isSignUp={true} />
-    </Layout>
-  );
-};
 
-export default SignUpPage;
+      <div className="flex justify-center items-center py-12">
+        <div className="text-center text-white mb-6">
+          <h1 className="text-3xl font-bold drop-shadow-md mb-2">はじめまして！</h1>
+          <p className="text-white/80 text-sm">Spark β で新しい出会いを。</p>
+        </div>
+        <AuthForm isSignUp={true} />
+      </div>
+    </Layout>
+  )
+}
+
+export default SignUpPage
