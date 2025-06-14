@@ -49,6 +49,7 @@ export async function fetchMembersForMatching(): Promise<Member[]> {
       members.push({
         id: row.id,
         part,
+        nickname : row .id,
         university: row.university ?? '不明',
         experience: row.experience ?? 0,
         pastMatchedWith: row.past_matched_ids ?? [],

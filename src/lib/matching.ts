@@ -74,7 +74,6 @@ export function generateBands(members: Member[]): Band[] {
 }
 
 import { supabase } from './supabase'
-import type { Band } from './matching'
 
 export async function updatePastMatchedIds(bands: Band[]) {
   for (const band of bands) {
