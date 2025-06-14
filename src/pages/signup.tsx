@@ -1,7 +1,6 @@
 // pages/signup.tsx
 import React from 'react'
 import Head from 'next/head'
-import Layout from '../components/Layout'
 import AuthForm from '../components/AuthForm'
 
 const SignUpPage: React.FC = () => {
