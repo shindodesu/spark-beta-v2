@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
+import type { Member, Part } from './matching' ;
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,3 +29,33 @@ export const useAuth = () => {
 
   return { user, loading };
 };
+
+export async function fetchMembersForMatching(): Promise<Member[]> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, part, university, experience, past_matched_ids')
+
+  if (error) {
+    console.error('メンバー取得エラー:', error)
+    return []
+  }
+
+  const members: Member[] = []
+
+  data?.forEach((row) => {
+    if (!row.part || !Array.isArray(row.part)) return
+
+    for (const part of row.part as Part[]) {
+      members.push({
+        id: row.id,
+        part,
+        nickname : row .id,
+        university: row.university ?? '不明',
+        experience: row.experience ?? 0,
+        pastMatchedWith: row.past_matched_ids ?? [],
+      })
+    }
+  })
+
+  return members
+}

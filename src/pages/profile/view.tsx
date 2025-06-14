@@ -18,7 +18,7 @@ const ViewProfilePage: React.FC = () => {
 
       const { data, error } = await supabase
         .from('users')
-        .select('id, name, real_name, email, part, experience_years, region, bio')
+        .select('id, name, real_name, email, part, experience_years, region, bio, university')
         .eq('id', user.id)
         .single()
 
@@ -41,6 +41,7 @@ const ViewProfilePage: React.FC = () => {
           experience_years: data.experience_years,
           region: data.region,
           bio: data.bio,
+          university: data.university,
         })
       }
     }
@@ -89,6 +90,7 @@ const ViewProfilePage: React.FC = () => {
           <div className="space-y-4 text-white/90">
             <p><strong>あだ名：</strong>{profileData.nickname}</p>
             <p><strong>本名：</strong>{profileData.real_name}</p>
+            <p><strong>大学名：</strong>{profileData.university}</p>
             <p><strong>パート：</strong>{profileData.part?.join(', ')}</p>
             <p><strong>地域：</strong>{profileData.region}</p>
             <p><strong>経験年数：</strong>{profileData.experience_years}年</p>

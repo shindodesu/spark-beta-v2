@@ -1,12 +1,11 @@
 // pages/signup.tsx
 import React from 'react'
 import Head from 'next/head'
-import Layout from '../components/Layout'
 import AuthForm from '../components/AuthForm'
 
 const SignUpPage: React.FC = () => {
   return (
-    <Layout>
+    <>
       <Head>
         <title>Spark β - サインアップ</title>
         <meta name="description" content="Spark βでシャッフルバンドを始めよう！" />
@@ -20,7 +19,7 @@ const SignUpPage: React.FC = () => {
         </div>
         <AuthForm isSignUp={true} />
       </div>
-    </Layout>
+    </>
   )
 }
 

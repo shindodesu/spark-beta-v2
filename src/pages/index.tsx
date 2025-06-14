@@ -1,7 +1,6 @@
 // pages/index.tsx
 import Head from 'next/head'
 import Link from 'next/link'
-import Layout from '../components/Layout'
 import Image from 'next/image'
 import { GetStaticProps } from 'next'
 import { createClient } from '@supabase/supabase-js'
@@ -27,7 +26,7 @@ interface HomeProps {
 
 const HomePage: React.FC<HomeProps> = ({ events }) => {
   return (
-    <Layout>
+    <>
       <Head>
         <title>Spark β</title>
         <meta name="description" content="アカペラのバンドマッチングプラットフォーム Spark β" />
@@ -119,7 +118,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
                   </span>
                   <div className="mt-4 text-right">
                     <Link
-                      href={`/events/${event.id}`}
+                      href={`/events/${event.id}/apply`}
                       className="text-pink-300 hover:text-pink-200 font-semibold"
                     >
                       詳細を見る →
@@ -131,7 +130,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
           )}
         </div>
       </div>
-    </Layout>
+    </>
   )
 }
 

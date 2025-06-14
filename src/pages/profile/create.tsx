@@ -1,4 +1,3 @@
-// pages/profile/create.tsx
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -21,7 +20,7 @@ const CreateProfilePage: React.FC = () => {
 
       const { data, error: fetchError } = await supabase
         .from('users')
-        .select('name, real_name, part, experience_years, region, bio')
+        .select('name, real_name, part, experience_years, region, bio, university')
         .eq('id', user.id)
         .single()
 
@@ -35,6 +34,7 @@ const CreateProfilePage: React.FC = () => {
           experience_years: data.experience_years,
           region: data.region,
           bio: data.bio,
+          university: data.university,
         })
       }
     }
@@ -64,6 +64,7 @@ const CreateProfilePage: React.FC = () => {
           region: profileData.region,
           experience_years: profileData.experience_years,
           bio: profileData.bio,
+          university: profileData.university,
           email: user.email,
         },
         { onConflict: 'id' }
@@ -95,7 +96,17 @@ const CreateProfilePage: React.FC = () => {
         <div className="w-full max-w-2xl bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-lg text-white">
           <h2 className="text-2xl font-bold mb-6 text-center drop-shadow-sm">プロフィールを入力</h2>
           <ProfileForm
-            initialData={initialProfileData}
+            initialData={
+              initialProfileData ?? {
+                nickname: '',
+                real_name: '',
+                university: '',
+                part: [],
+                region: '',
+                experience_years: 0,
+                bio: '',
+              }
+            }
             onSubmit={handleProfileSubmit}
             isSubmitting={isSubmitting}
             error={error}
