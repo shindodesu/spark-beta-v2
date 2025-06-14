@@ -42,7 +42,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp }) => {
           setMessage(`ログインエラー: ${error.message}`)
         } else if (data.user) {
           setMessage('ログイン成功！')
-          router.push('/profile/create')
+          router.push('/')
         }
       }
     } catch (error) {

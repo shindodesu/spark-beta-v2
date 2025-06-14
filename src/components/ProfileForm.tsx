@@ -1,4 +1,3 @@
-// components/ProfileForm.tsx
 import React, { useState, useEffect } from 'react'
 import { User } from '../types'
 
@@ -22,23 +21,28 @@ const REGIONS = [
   '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県', 'その他'
 ]
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubmitting, error }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({
+  initialData,
+  onSubmit,
+  isSubmitting,
+  error
+}) => {
   const [nickname, setNickname] = useState(initialData?.nickname || '')
   const [realName, setRealName] = useState(initialData?.real_name || '')
+  const [university, setUniversity] = useState(initialData?.university || '')
   const [selectedParts, setSelectedParts] = useState<string[]>(initialData?.part || [])
   const [region, setRegion] = useState(initialData?.region || '')
   const [experienceYears, setExperienceYears] = useState(initialData?.experience_years || 0)
   const [bio, setBio] = useState(initialData?.bio || '')
 
   useEffect(() => {
-    if (initialData) {
-      setRealName(initialData.real_name || '')
-      setNickname(initialData.nickname)
-      setSelectedParts(initialData.part)
-      setRegion(initialData.region)
-      setExperienceYears(initialData.experience_years)
-      setBio(initialData.bio || '')
-    }
+    setNickname(initialData?.nickname || '')
+    setRealName(initialData?.real_name || '')
+    setUniversity(initialData?.university || '')
+    setSelectedParts(initialData?.part || [])
+    setRegion(initialData?.region || '')
+    setExperienceYears(initialData?.experience_years || 0)
+    setBio(initialData?.bio || '')
   }, [initialData])
 
   const handlePartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,13 +54,23 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit({ real_name: realName, nickname, part: selectedParts, region, experience_years: experienceYears, bio })
+    await onSubmit({
+      real_name: realName,
+      nickname,
+      university,
+      part: selectedParts,
+      region,
+      experience_years: experienceYears,
+      bio
+    })
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 text-white">
       <div>
-        <label htmlFor="nickname" className="block text-sm mb-1 text-white/80">あだ名（公開）</label>
+        <label htmlFor="nickname" className="block text-sm mb-1 text-white/80">
+          あだ名（公開）
+        </label>
         <input
           type="text"
           id="nickname"
@@ -68,13 +82,29 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
       </div>
 
       <div>
-        <label htmlFor="real_name" className="block text-sm mb-1 text-white/80">本名（非公開）</label>
+        <label htmlFor="real_name" className="block text-sm mb-1 text-white/80">
+          本名（非公開）
+        </label>
         <input
           type="text"
           id="real_name"
           className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-white"
           value={realName}
           onChange={(e) => setRealName(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="university" className="block text-sm mb-1 text-white/80">
+          大学名
+        </label>
+        <input
+          type="text"
+          id="university"
+          className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-white"
+          value={university}
+          onChange={(e) => setUniversity(e.target.value)}
           required
         />
       </div>
@@ -98,7 +128,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
       </div>
 
       <div>
-        <label htmlFor="region" className="block text-sm mb-1 text-white/80">地域（都道府県）</label>
+        <label htmlFor="region" className="block text-sm mb-1 text-white/80">
+          地域（都道府県）
+        </label>
         <select
           id="region"
           className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-white"
@@ -108,13 +140,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
         >
           <option value="">選択してください</option>
           {REGIONS.map((r) => (
-            <option key={r} value={r}>{r}</option>
+            <option key={r} value={r}>
+              {r}
+            </option>
           ))}
         </select>
       </div>
 
       <div>
-        <label htmlFor="experienceYears" className="block text-sm mb-1 text-white/80">経験年数（何年目か）</label>
+        <label htmlFor="experienceYears" className="block text-sm mb-1 text-white/80">
+          経験年数（何年目か）
+        </label>
         <input
           type="number"
           id="experienceYears"
@@ -127,7 +163,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, isSubm
       </div>
 
       <div>
-        <label htmlFor="bio" className="block text-sm mb-1 text-white/80">自己紹介</label>
+        <label htmlFor="bio" className="block text-sm mb-1 text-white/80">
+          自己紹介
+        </label>
         <textarea
           id="bio"
           className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white"
