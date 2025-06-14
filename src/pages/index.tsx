@@ -3,7 +3,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import { GetStaticProps } from 'next'
+import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,6 +27,16 @@ interface HomeProps {
 }
 
 const HomePage: React.FC<HomeProps> = ({ events }) => {
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    getUser()
+  }, [])
+
   return (
     <>
       <Head>
@@ -51,20 +63,23 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
           アカペラをやりたい人同士が、<strong>企画</strong>と<strong>場所</strong>ベースでマッチングし、<br />
           シャッフルバンドを結成できるプラットフォーム。
         </p>
-        <div className="flex space-x-4 mb-12">
-          <Link
-            href="/signup"
-            className="px-6 py-3 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:brightness-110 text-white rounded-md text-lg font-semibold shadow transition"
-          >
-            サインアップ
-          </Link>
-          <Link
-            href="/login"
-            className="px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-md text-lg font-semibold shadow transition"
-          >
-            ログイン
-          </Link>
-        </div>
+
+        {!user && (
+          <div className="flex space-x-4 mb-12">
+            <Link
+              href="/signup"
+              className="px-6 py-3 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:brightness-110 text-white rounded-md text-lg font-semibold shadow transition"
+            >
+              サインアップ
+            </Link>
+            <Link
+              href="/login"
+              className="px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-md text-lg font-semibold shadow transition"
+            >
+              ログイン
+            </Link>
+          </div>
+        )}
 
         <div className="w-full max-w-4xl">
           <h2 className="text-3xl font-bold text-white text-center mb-6 drop-shadow-md">

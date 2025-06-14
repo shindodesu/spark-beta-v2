@@ -4,6 +4,8 @@ import { User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
 import type { Member, Part } from './matching' ;
 
+
+
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,3 +61,4 @@ export async function fetchMembersForMatching(): Promise<Member[]> {
 
   return members
 }
+
