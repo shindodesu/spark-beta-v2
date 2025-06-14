@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
+import type { User } from '@supabase/supabase-js'
 
 interface LayoutProps {
   children: ReactNode
@@ -11,7 +12,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {

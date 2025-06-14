@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { GetStaticProps } from 'next'
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,7 +27,7 @@ interface HomeProps {
 }
 
 const HomePage: React.FC<HomeProps> = ({ events }) => {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const getUser = async () => {
