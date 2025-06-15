@@ -3,7 +3,6 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
-import type { User } from '@supabase/supabase-js'
 
 interface LayoutProps {
   children: ReactNode
@@ -12,7 +11,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +28,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
     fetchData()
   }, [])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    location.reload()
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#1e3c72] to-[#2a5298] text-white font-sans">
@@ -48,7 +52,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </span>
           </Link>
 
-          {/* ハンバーガーアイコン */}
+          {/* ハンバーガー */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="flex flex-col space-y-1 sm:hidden"
@@ -76,6 +80,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </Link>
               </>
             )}
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="hover:text-pink-300 transition"
+              >
+                ログアウト
+              </button>
+            )}
             <Link href="/notifications" className="relative hover:text-pink-300 transition">
               🔔
               {unreadCount > 0 && (
@@ -88,9 +100,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </nav>
       </header>
 
-      {/* モバイルドロワーメニュー */}
+      {/* モバイルドロワー */}
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur" onClick={() => setMenuOpen(false)}>
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur"
+          onClick={() => setMenuOpen(false)}
+        >
           <div
             className="fixed top-0 right-0 w-64 h-full bg-[#1e3c72] p-6 shadow-lg flex flex-col space-y-4"
             onClick={(e) => e.stopPropagation()}
@@ -116,6 +131,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   サインアップ
                 </Link>
               </>
+            )}
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="hover:text-pink-300 transition text-left"
+              >
+                ログアウト
+              </button>
             )}
             <Link href="/notifications" className="relative hover:text-pink-300 transition">
               🔔 通知
@@ -143,4 +166,3 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 }
 
 export default Layout
-

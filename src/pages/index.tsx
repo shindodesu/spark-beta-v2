@@ -62,7 +62,11 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
         <p className="text-base text-white/70 mb-8 max-w-xl">
           アカペラをやりたい人同士が、<strong>企画</strong>と<strong>場所</strong>ベースでマッチングし、<br />
           シャッフルバンドを結成できるプラットフォーム。
-        </p>
+        <Link href="/about" className="text-sm underline text-white/80 hover:text-white transition">
+  …もっと読む
+</Link>
+</p>
+
 
         {!user && (
           <div className="flex space-x-4 mb-12">
