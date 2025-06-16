@@ -26,7 +26,7 @@ export default function HowToUse() {
           <li>
             <span className="font-bold">🎸 4. バンドマッチング</span><br />
             ・運営が条件に合わせて自動でバンドを生成<br />
-            ・確定後、マイページからバンドを確認
+            ・確定後、マッチングページからバンドを確認
           </li>
   
           <li>

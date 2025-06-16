@@ -65,6 +65,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* デスクトップメニュー */}
           <div className="hidden sm:flex items-center space-x-4 text-sm font-medium relative">
+          <Link href="/about" className="hover:text-pink-300 transition">
+        Spark β について
+      </Link>
+      <Link href="/howto" className="hover:text-pink-300 transition">
+        使い方ガイド
+      </Link>
             <Link href="/profile/view" className="hover:text-pink-300 transition">
               プロフィール
             </Link>
@@ -117,6 +123,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             >
               ✕ 閉じる
             </button>
+            <Link href="/about" className="hover:text-pink-300 transition">
+        Spark β について
+      </Link>
+      <Link href="/howto" className="hover:text-pink-300 transition">
+        使い方ガイド
+      </Link>
             <Link href="/profile/view" className="hover:text-pink-300 transition">
               プロフィール
             </Link>
