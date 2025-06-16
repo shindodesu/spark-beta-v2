@@ -28,7 +28,6 @@ interface HomeProps {
 
 const HomePage: React.FC<HomeProps> = ({ events }) => {
   const [user, setUser] = useState<User | null>(null)
-  const [profile, setProfile] = useState<any | null>(null)
   const [isProfileIncomplete, setIsProfileIncomplete] = useState(false)
 
   useEffect(() => {
@@ -51,11 +50,9 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
         .single()
 
       if (error) {
-        console.error('プロフィール取得エラー:', error)
+        console.error('ユーザーデータ取得エラー:', error)
         return
       }
-
-      setProfile(data)
 
       // 空欄チェック
       const hasEmpty = Object.values(data).some(
