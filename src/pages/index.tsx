@@ -28,6 +28,8 @@ interface HomeProps {
 
 const HomePage: React.FC<HomeProps> = ({ events }) => {
   const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<any | null>(null)
+  const [isProfileIncomplete, setIsProfileIncomplete] = useState(false)
 
   useEffect(() => {
     const getUser = async () => {
@@ -36,6 +38,34 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
     }
     getUser()
   }, [])
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user) return
+
+      // ✅ profilesテーブルを想定
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (error) {
+        console.error('プロフィール取得エラー:', error)
+        return
+      }
+
+      setProfile(data)
+
+      // 空欄チェック
+      const hasEmpty = Object.values(data).some(
+        (value) => value === null || value === ''
+      )
+      setIsProfileIncomplete(hasEmpty)
+    }
+
+    fetchProfile()
+  }, [user])
 
   return (
     <>
@@ -62,18 +92,28 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
         <p className="text-base text-white/70 mb-8 max-w-xl">
           アカペラをやりたい人同士が、<strong>企画</strong>と<strong>場所</strong>ベースでマッチングし、<br />
           シャッフルバンドを結成できるプラットフォーム。
-        <Link href="/about" className="text-sm underline text-white/80 hover:text-white transition">
-  …もっと読む
-</Link>
-</p>
-{/* ✅ 使い方ページへのリンクを追加 */}
-<Link
-  href="/howto"
-  className="mb-8 inline-block text-pink-300 hover:text-pink-200 font-semibold underline transition"
->
-  使い方を見る →
-</Link>
+          <Link href="/about" className="text-sm underline text-white/80 hover:text-white transition">
+            …もっと読む
+          </Link>
+        </p>
 
+        {/* ✅ 使い方ページへのリンク */}
+        <Link
+          href="/howto"
+          className="mb-8 inline-block text-pink-300 hover:text-pink-200 font-semibold underline transition"
+        >
+          使い方を見る →
+        </Link>
+
+        {/* ✅ プロフィール未入力の人向けリマインダー */}
+        {user && isProfileIncomplete && (
+          <div className="mb-6 p-4 bg-yellow-100 text-yellow-800 rounded-md shadow">
+            🚨 プロフィールが未完成です！
+            <Link href="/profile/create" className="underline font-semibold ml-2">
+              こちらから入力してください →
+            </Link>
+          </div>
+        )}
 
         {!user && (
           <div className="flex space-x-4 mb-12">
