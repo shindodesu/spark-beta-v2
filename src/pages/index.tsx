@@ -66,6 +66,13 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
   …もっと読む
 </Link>
 </p>
+{/* ✅ 使い方ページへのリンクを追加 */}
+<Link
+  href="/howto"
+  className="mb-8 inline-block text-pink-300 hover:text-pink-200 font-semibold underline transition"
+>
+  使い方を見る →
+</Link>
 
 
         {!user && (
