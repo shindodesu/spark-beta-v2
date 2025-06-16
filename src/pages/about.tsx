@@ -30,13 +30,13 @@ export default function About() {
           これまでの音楽コミュニティには、
           「閉じた雰囲気」や「同調圧力に縛られる空気」みたいなルールが多くて、
           本当に面白い音や出会いが埋もれてしまうことがありました。
-          かつての自分もそんな苦しい思いをしていました。
         </p>
 
         <p>
-          けど、そんな時代は俺で終わりにしたい。
-          芸術工学の知見とIT技術を用いた新しい仕組みで火花を起こそう！
-          というのが Spark β の始まりです。
+        けど、そんな時代は俺で終わりにする。
+芸術工学（音響設計専攻）の知見と IT 技術を掛け合わせて、
+まだ誰も作らなかった仕組みを生み出した。
+それが Spark β です
         </p>
 
         <h2 className="text-2xl font-bold mt-10 mb-2">
@@ -77,7 +77,8 @@ export default function About() {
         </p>
 
         <p className="mt-10 text-right text-sm text-white/70">
-          — Written by 進藤光介(Spark β 開発者)
+        — Written by Kosuke Shindo (Acoustic Design, School of Design, Kyushu University / Spark β Developer)
+
         </p>
       </section>
 

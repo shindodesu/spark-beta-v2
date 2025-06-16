@@ -14,10 +14,25 @@ const ApplyPage = () => {
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) setUserId(user.id)
+      if (user) {
+        setUserId(user.id)
+
+        if (eventId) {
+          const { data, error } = await supabase
+            .from('event_participants')
+            .select('id')
+            .eq('event_id', eventId)
+            .eq('user_id', user.id)
+            .maybeSingle()
+
+          if (data && !error) {
+            setSubmitted(true)
+          }
+        }
+      }
     }
     getUser()
-  }, [])
+  }, [eventId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
