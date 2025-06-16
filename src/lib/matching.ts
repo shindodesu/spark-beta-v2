@@ -98,3 +98,31 @@ export async function updatePastMatchedIds(bands: Band[]) {
   }
 }
 
+
+export const createChatRoomForEvent = async (eventId: string, userIds: string[]) => {
+  // 1) chat_room を作る
+  const { data: room, error: roomError } = await supabase
+    .from('chat_rooms')
+    .insert({
+      room_type: 'event',
+      related_id: eventId
+    })
+    .select()
+    .single()
+
+  if (roomError) throw roomError
+
+  // 2) chat_room_members に全員登録
+  const members = userIds.map(uid => ({
+    chat_room_id: room.id,
+    user_id: uid
+  }))
+
+  const { error: memberError } = await supabase
+    .from('chat_room_members')
+    .insert(members)
+
+  if (memberError) throw memberError
+
+  return room
+}
