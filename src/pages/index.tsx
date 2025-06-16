@@ -28,7 +28,6 @@ interface HomeProps {
 
 const HomePage: React.FC<HomeProps> = ({ events }) => {
   const [user, setUser] = useState<User | null>(null)
-  const [profile, setProfile] = useState<any | null>(null)
   const [isProfileIncomplete, setIsProfileIncomplete] = useState(false)
 
   useEffect(() => {
@@ -51,11 +50,9 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
         .single()
 
       if (error) {
-        console.error('プロフィール取得エラー:', error)
+        console.error('ユーザーデータ取得エラー:', error)
         return
       }
-
-      setProfile(data)
 
       // 空欄チェック
       const hasEmpty = Object.values(data).some(
@@ -108,7 +105,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
         {/* ✅ プロフィール未入力の人向けリマインダー */}
         {user && isProfileIncomplete && (
           <div className="mb-6 p-4 bg-yellow-100 text-yellow-800 rounded-md shadow">
-            🎯 プロフィールが未完成です！
+            🚨 プロフィールが未完成です！
             <Link href="/profile/create" className="underline font-semibold ml-2">
               こちらから入力してください →
             </Link>

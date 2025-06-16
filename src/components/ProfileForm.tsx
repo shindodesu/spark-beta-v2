@@ -32,7 +32,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const [university, setUniversity] = useState(initialData?.university || '')
   const [selectedParts, setSelectedParts] = useState<string[]>(initialData?.part || [])
   const [region, setRegion] = useState(initialData?.region || '')
-  const [experienceYears, setExperienceYears] = useState(initialData?.experience_years || 0)
+  // ✅ string にして空欄許可
+  const [experienceYears, setExperienceYears] = useState(
+    initialData?.experience_years?.toString() || ''
+  )
   const [bio, setBio] = useState(initialData?.bio || '')
 
   useEffect(() => {
@@ -41,7 +44,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
     setUniversity(initialData?.university || '')
     setSelectedParts(initialData?.part || [])
     setRegion(initialData?.region || '')
-    setExperienceYears(initialData?.experience_years || 0)
+    setExperienceYears(initialData?.experience_years?.toString() || '')
     setBio(initialData?.bio || '')
   }, [initialData])
 
@@ -60,7 +63,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       university,
       part: selectedParts,
       region,
-      experience_years: experienceYears,
+      experience_years: parseInt(experienceYears) || 0, // ✅ 送信時だけ数値に
       bio
     })
   }
@@ -154,10 +157,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
         <input
           type="number"
           id="experienceYears"
-          className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-white appearance-none"
           value={experienceYears}
-          onChange={(e) => setExperienceYears(parseInt(e.target.value) || 0)}
+          onChange={(e) => setExperienceYears(e.target.value)}
           min="0"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="例: 2"
           required
         />
       </div>
