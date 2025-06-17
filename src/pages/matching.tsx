@@ -57,7 +57,7 @@ const MatchingPage: React.FC = () => {
                         <strong>大学：</strong>{member.university || '不明'}
                       </span>
                       <span className="block text-sm">
-                        <strong>経験：</strong>{member.experience} 年目
+                        <strong>経験：</strong>{member.experience_years} 年目
                       </span>
                     </li>
                   ))}
