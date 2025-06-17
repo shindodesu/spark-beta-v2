@@ -9,6 +9,16 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+// メンバーの型
+type Member = {
+  id: string
+}
+
+// リクエストBodyの型
+type BandsRequestBody = {
+  bands: Member[][]
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -16,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // フロントから送られた bands を取得
-    const { bands } = req.body as { bands: any[][] }
+    const { bands } = req.body as BandsRequestBody
 
     if (!bands || !Array.isArray(bands)) {
       return res.status(400).json({ error: 'Invalid bands data' })
@@ -40,13 +50,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           .from('users')
           .select('past_matched_ids')
           .eq('id', member.id)
-          .single()
+          .single<{ past_matched_ids: string[] | null }>()
 
         if (userError) throw userError
 
         const updatedPastMatchedIds = Array.isArray(user.past_matched_ids)
-          ? [...user.past_matched_ids, ...band.map((m: any) => m.id).filter((id: string) => id !== member.id)]
-          : band.map((m: any) => m.id).filter((id: string) => id !== member.id)
+          ? [...user.past_matched_ids, ...band.map((m) => m.id).filter((id) => id !== member.id)]
+          : band.map((m) => m.id).filter((id) => id !== member.id)
 
         const { error: updateError } = await supabase
           .from('users')
@@ -70,8 +80,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     return res.status(200).json({ message: 'Matching and chat rooms saved successfully' })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error saving matching:', error)
-    return res.status(500).json({ error: error.message || 'Server error' })
+    const err = error as { message?: string }
+    return res.status(500).json({ error: err.message || 'Server error' })
   }
 }
