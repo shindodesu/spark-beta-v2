@@ -35,7 +35,7 @@ export const useAuth = () => {
 export async function fetchMembersForMatching(): Promise<Member[]> {
   const { data, error } = await supabase
     .from('users')
-    .select('id, part, university, experience, past_matched_ids')
+    .select('id, part, university, experience_years, past_matched_ids')
 
   if (error) {
     console.error('メンバー取得エラー:', error)
@@ -53,7 +53,7 @@ export async function fetchMembersForMatching(): Promise<Member[]> {
         part,
         nickname : row .id,
         university: row.university ?? '不明',
-        experience: row.experience ?? 0,
+        experience_years: row.experience_years ?? 0,
         pastMatchedWith: row.past_matched_ids ?? [],
       })
     }

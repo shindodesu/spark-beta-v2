@@ -5,7 +5,7 @@ export type Member = {
   part: Part
   nickname: string
   university: string
-  experience: number // 0〜10スケール
+  experience_years: number // 0〜10スケール
   pastMatchedWith: string[] // IDの配列
 }
 
@@ -16,9 +16,9 @@ export function calculateBandScore(band: Band): number {
   const universitySet = new Set(band.map(m => m.university))
 
   // 経験年数の標準偏差
-  const experienceAvg = band.reduce((sum, m) => sum + m.experience, 0) / band.length
+  const experienceAvg = band.reduce((sum, m) => sum + m.experience_years, 0) / band.length
   const experienceStdDev = Math.sqrt(
-    band.reduce((sum, m) => sum + Math.pow(m.experience - experienceAvg, 2), 0) / band.length
+    band.reduce((sum, m) => sum + Math.pow(m.experience_years - experienceAvg, 2), 0) / band.length
   )
 
   // 過去にマッチした相手が同じバンドにいる数をカウント
