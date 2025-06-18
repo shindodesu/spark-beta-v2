@@ -1,4 +1,5 @@
-// components/Layout.tsx
+// ✅ 改良版 Layout.tsx
+
 import React, { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -65,26 +66,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* デスクトップメニュー */}
           <div className="hidden sm:flex items-center space-x-4 text-sm font-medium relative">
-          <Link href="/about" className="hover:text-pink-300 transition">
-        Spark β について
-      </Link>
-      <Link href="/howto" className="hover:text-pink-300 transition">
-        使い方ガイド
-      </Link>
-            <Link href="/profile/view" className="hover:text-pink-300 transition">
-              プロフィール
-            </Link>
-            <Link href="/matching" className="hover:text-pink-300 transition">
-              マッチング
-            </Link>
+            <Link href="/about" className="hover:text-pink-300 transition">Spark β について</Link>
+            <Link href="/howto" className="hover:text-pink-300 transition">使い方ガイド</Link>
+            <Link href="/profile/view" className="hover:text-pink-300 transition">プロフィール</Link>
+            <Link href="/my-bands" className="hover:text-pink-300 transition">マイバンド</Link>
             {!user && (
               <>
-                <Link href="/login" className="hover:text-pink-300 transition">
-                  ログイン
-                </Link>
-                <Link href="/signup" className="hover:text-pink-300 transition">
-                  サインアップ
-                </Link>
+                <Link href="/login" className="hover:text-pink-300 transition">ログイン</Link>
+                <Link href="/signup" className="hover:text-pink-300 transition">サインアップ</Link>
               </>
             )}
             {user && (
@@ -108,62 +97,49 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       {/* モバイルドロワー */}
-      {menuOpen && (
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur transition-opacity ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+        onClick={() => setMenuOpen(false)}
+      >
         <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur"
-          onClick={() => setMenuOpen(false)}
+          className={`fixed top-0 right-0 w-64 h-full bg-[#1e3c72] p-6 shadow-lg flex flex-col space-y-4 transform transition-transform duration-300 ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div
-            className="fixed top-0 right-0 w-64 h-full bg-[#1e3c72] p-6 shadow-lg flex flex-col space-y-4"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="text-white text-right mb-4"
           >
+            ✕ 閉じる
+          </button>
+          <Link href="/" className="hover:text-pink-300 transition">🏠 ホームへ戻る</Link>
+          <Link href="/about" className="hover:text-pink-300 transition">Spark β について</Link>
+          <Link href="/howto" className="hover:text-pink-300 transition">使い方ガイド</Link>
+          <Link href="/profile/view" className="hover:text-pink-300 transition">プロフィール</Link>
+          <Link href="/my-bands" className="hover:text-pink-300 transition">マイバンド</Link>
+          {!user && (
+            <>
+              <Link href="/login" className="hover:text-pink-300 transition">ログイン</Link>
+              <Link href="/signup" className="hover:text-pink-300 transition">サインアップ</Link>
+            </>
+          )}
+          {user && (
             <button
-              onClick={() => setMenuOpen(false)}
-              className="text-white text-right mb-4"
+              onClick={handleLogout}
+              className="hover:text-pink-300 transition text-left"
             >
-              ✕ 閉じる
+              ログアウト
             </button>
-            <Link href="/about" className="hover:text-pink-300 transition">
-        Spark β について
-      </Link>
-      <Link href="/howto" className="hover:text-pink-300 transition">
-        使い方ガイド
-      </Link>
-            <Link href="/profile/view" className="hover:text-pink-300 transition">
-              プロフィール
-            </Link>
-            <Link href="/matching" className="hover:text-pink-300 transition">
-              マッチング
-            </Link>
-            {!user && (
-              <>
-                <Link href="/login" className="hover:text-pink-300 transition">
-                  ログイン
-                </Link>
-                <Link href="/signup" className="hover:text-pink-300 transition">
-                  サインアップ
-                </Link>
-              </>
+          )}
+          <Link href="/notifications" className="relative hover:text-pink-300 transition">
+            🔔 通知
+            {unreadCount > 0 && (
+              <span className="ml-2 inline-block text-xs bg-pink-500 text-white px-1.5 py-0.5 rounded-full">
+                {unreadCount}
+              </span>
             )}
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="hover:text-pink-300 transition text-left"
-              >
-                ログアウト
-              </button>
-            )}
-            <Link href="/notifications" className="relative hover:text-pink-300 transition">
-              🔔 通知
-              {unreadCount > 0 && (
-                <span className="ml-2 inline-block text-xs bg-pink-500 text-white px-1.5 py-0.5 rounded-full">
-                  {unreadCount}
-                </span>
-              )}
-            </Link>
-          </div>
+          </Link>
         </div>
-      )}
+      </div>
 
       {/* メイン */}
       <main className="flex-grow w-full max-w-6xl mx-auto px-4 py-8">

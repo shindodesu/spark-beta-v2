@@ -28,7 +28,7 @@ const CreateProfilePage: React.FC = () => {
         setError(`プロフィールの取得に失敗しました: ${fetchError.message}`)
       } else if (data) {
         setInitialProfileData({
-          nickname: data.name,
+          name: data.name,
           real_name: data.real_name,
           part: data.part,
           experience_years: data.experience_years,
@@ -58,7 +58,7 @@ const CreateProfilePage: React.FC = () => {
       const { error: upsertError } = await supabase.from('users').upsert(
         {
           id: user.id,
-          name: profileData.nickname,
+          name: profileData.name,
           real_name: profileData.real_name,
           part: profileData.part,
           region: profileData.region,
@@ -98,7 +98,7 @@ const CreateProfilePage: React.FC = () => {
           <ProfileForm
             initialData={
               initialProfileData ?? {
-                nickname: '',
+                name: '',
                 real_name: '',
                 university: '',
                 part: [],

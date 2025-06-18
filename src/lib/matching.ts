@@ -1,15 +1,5 @@
-export type Part = 'Soprano' | 'Alto' | 'Tenor' | 'Baritone' | 'Bass' | 'Vocal_Percussion'
+import { Member, Band,} from '@/types/supabase'
 
-export type Member = {
-  id: string
-  part: Part
-  nickname: string
-  university: string
-  experience_years: number // 0〜10スケール
-  pastMatchedWith: string[] // IDの配列
-}
-
-export type Band = Member[]
 
 // バンドスコアを計算：大学の多様性 + 経験値のバランス - 過去のマッチ被り
 export function calculateBandScore(band: Band): number {
@@ -23,7 +13,7 @@ export function calculateBandScore(band: Band): number {
 
   // 過去にマッチした相手が同じバンドにいる数をカウント
   const pastMatchPenalty = band.flatMap(m => 
-    m.pastMatchedWith.filter(id => band.some(b => b.id === id))
+    m.past_matched_ids.filter(id => band.some(b => b.id === id))
   ).length
 
   const universityScore = universitySet.size / band.length // 最大1
@@ -35,12 +25,16 @@ export function calculateBandScore(band: Band): number {
 
 // 全通りからスコア順に良いバンドを選出
 export function generateBands(members: Member[]): Band[] {
-  const byPart: Record<Part, Member[]> = {
+  const byPart: Record<string, Member[]> = {
     Soprano: [], Alto: [], Tenor: [], Baritone: [], Bass: [], Vocal_Percussion: []
   }
 
   for (const m of members) {
-    byPart[m.part]?.push(m)
+    for (const p of m.part) {
+      if (byPart[p]) {
+        byPart[p].push(m)
+     }
+    }
   }
 
   const possibleBands: Band[] = []

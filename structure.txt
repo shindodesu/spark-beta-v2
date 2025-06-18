@@ -1,0 +1,63 @@
+.
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── spark-beta-logo.png
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── src
+│   ├── components
+│   │   ├── AuthForm.tsx
+│   │   ├── Layout.tsx
+│   │   ├── ProfileForm.tsx
+│   │   └── ProtectedRoute.tsx
+│   ├── lib
+│   │   ├── hooks.ts
+│   │   ├── matching.ts
+│   │   └── supabase.ts
+│   ├── pages
+│   │   ├── _app.tsx
+│   │   ├── _document.tsx
+│   │   ├── about.tsx
+│   │   ├── admin.tsx
+│   │   ├── api
+│   │   │   ├── adimin
+│   │   │   │   └── generate-matching.ts
+│   │   │   ├── auth
+│   │   │   │   └── callback.ts
+│   │   │   └── matching.ts
+│   │   ├── chat
+│   │   │   ├── [roomId].tsx
+│   │   │   └── Index.tsx
+│   │   ├── events
+│   │   │   └── [id]
+│   │   │       └── apply.tsx
+│   │   ├── howto.tsx
+│   │   ├── index.tsx
+│   │   ├── login.tsx
+│   │   ├── my-bands.tsx
+│   │   ├── notifications.tsx
+│   │   ├── profile
+│   │   │   ├── create.tsx
+│   │   │   └── view.tsx
+│   │   └── signup.tsx
+│   ├── styles
+│   │   └── globals.css
+│   ├── types
+│   │   ├── index.ts
+│   │   └── supabase.ts
+│   └── utils
+│       └── fetchOtherRoomUsers.ts
+├── structure.txt
+├── tailwind.config.js
+└── tsconfig.json
+
+16 directories, 45 files

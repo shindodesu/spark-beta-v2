@@ -2,7 +2,7 @@
 export interface User {
     id: string; // Supabase auth.users の id と同じ
     email : string;
-    nickname: string;
+    name: string;
     university : string;
     part: string[];
     region: string;
@@ -10,3 +10,4 @@ export interface User {
     real_name: string;
     bio: string;
   }
+
