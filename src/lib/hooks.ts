@@ -50,7 +50,7 @@ export async function fetchMembersForMatching(): Promise<Member[]> {
     for (const part of row.part as Part[]) {
       members.push({
         id: row.id,
-        part: [part],
+        part: row .part as Part[],
         name : row .id,
         university: row.university ?? '不明',
         experience_years: row.experience_years ?? 0,

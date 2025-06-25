@@ -4,7 +4,7 @@ import Head from 'next/head'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/hooks'
 import ProtectedRoute from '../../components/ProtectedRoute'
-import { User } from '../../types'
+import { User } from '../../types/supabase'
 import Link from 'next/link'
 
 const ViewProfilePage: React.FC = () => {

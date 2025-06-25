@@ -3,13 +3,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { supabase } from '@/lib/supabase'
+import type { ChatRoom } from '@/types/supabase'
 
-type ChatRoom = {
-  id: string
-  room_type: string
-  related_id: string
-  created_at: string
-}
 
 
 const ChatListPage = () => {

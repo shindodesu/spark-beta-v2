@@ -1,0 +1,53 @@
+.
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── project-structure.txt
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── spark-beta-logo.png
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── src
+│   ├── components
+│   │   ├── AuthForm.tsx
+│   │   ├── Layout.tsx
+│   │   ├── ProfileForm.tsx
+│   │   └── ProtectedRoute.tsx
+│   ├── lib
+│   │   ├── hooks.ts
+│   │   ├── matching.ts
+│   │   └── supabase.ts
+│   ├── pages
+│   │   ├── _app.tsx
+│   │   ├── _document.tsx
+│   │   ├── about.tsx
+│   │   ├── admin.tsx
+│   │   ├── api
+│   │   ├── chat
+│   │   ├── events
+│   │   ├── howto.tsx
+│   │   ├── index.tsx
+│   │   ├── login.tsx
+│   │   ├── my-bands.tsx
+│   │   ├── notifications.tsx
+│   │   ├── profile
+│   │   └── signup.tsx
+│   ├── styles
+│   │   └── globals.css
+│   ├── types
+│   │   └── supabase.ts
+│   └── utils
+│       └── fetchOtherRoomUsers.ts
+├── structure.txt
+├── tailwind.config.js
+├── tsconfig.json
+└── tsconfig.tsbuildinfo
+
+13 directories, 38 files

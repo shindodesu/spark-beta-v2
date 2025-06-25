@@ -2,24 +2,25 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from '@/lib/supabase'
 import { generateBands } from '@/lib/matching'
 import { fetchMembersForMatching } from '@/lib/hooks'
-import type { Member, BandRecord, ChatRoomRecord } from '@/types/supabase'
-
+import type { Member } from '@/types/supabase'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' })
-    return
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   const { event_id } = req.body
   if (!event_id) {
-    res.status(400).json({ error: 'Missing event_id' })
-    return
+    return res.status(400).json({ error: 'Missing event_id' })
   }
 
   try {
-    const safeMembers: Member[] = await fetchMembersForMatching()
-    const bands = generateBands(safeMembers)
+    // 既存のバンドとチャットルームを削除（必要に応じて）
+    await supabase.from('bands').delete().eq('event_id', event_id)
+    await supabase.from('chat_rooms').delete().eq('event_id', event_id)
+
+    const members: Member[] = await fetchMembersForMatching()
+    const bands = generateBands(members)
 
     for (let i = 0; i < bands.length; i++) {
       const band = bands[i]
@@ -30,62 +31,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .insert({
           event_id,
           band_number: bandNumber,
-          members: band.map(m => m.id)
+          members: band.map(m => m.id),
         })
         .select()
-        .single<BandRecord>()
+        .single()
 
-      if (bandError) throw bandError
+      if (bandError || !bandData) {
+        console.error('Band insert error:', bandError)
+        continue
+      }
 
-      const { data: room, error: roomError } = await supabase
+      const { error: roomError } = await supabase
         .from('chat_rooms')
         .insert({
           event_id,
-          band_id: bandData.id
+          band_id: bandData.id,
+          room_name: `Band ${bandNumber}`,
         })
-        .select()
-        .single<ChatRoomRecord>()
+        if (roomError || !bandData.id) {
+          console.error('Chat room insert error:', roomError)
+          continue
+        }
+        
 
-      if (roomError) throw roomError
-
-      const membersToInsert = band.map(member => ({
-        chat_room_id: room.id,
-        user_id: member.id
-      }))
-
-      const { error: membersError } = await supabase
-        .from('chat_room_members')
-        .insert(membersToInsert)
-
-      if (membersError) throw membersError
+      if (roomError) {
+        console.error('Chat room insert error:', roomError)
+        continue
+      }
     }
 
-    // ✅ Gmail SMTP で一括送信
-    const emails = safeMembers.map(m => m.email).filter(Boolean) as string[]
-    const nodemailer = require('nodemailer')
+    return res.status(200).json({ message: 'Matching generated successfully' })
 
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    })
-
-    const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: emails, // 一括送信
-      subject: '【Spark β】マッチング結果のお知らせ',
-      text: 'マッチング結果が決定しました！詳細はマイページからご確認ください。',
-      html: `<p>マッチング結果が決定しました！<br>詳細はマイページからご確認ください。</p>`,
-    }
-
-    await transporter.sendMail(mailOptions)
-
-    res.status(200).json({ message: '✅ マッチング生成 & Gmail SMTPで送信 完了！' })
-
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: String(err) })
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+

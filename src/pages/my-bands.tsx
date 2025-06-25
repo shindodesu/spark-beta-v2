@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Link from 'next/link'
+import type { Database } from '@/types/supabase'
+
+type ChatRoomMember = Database['public']['Tables']['chat_room_members']['Row']
+type Band = Database['public']['Tables']['bands']['Row']
+
 
 type RoomInfo = {
-  room_id: string
-  band_number: number
+  room_id: ChatRoomMember['chat_room_id']
+  band_number: Band['band_number']
 }
 
 const supabase = createClient(
@@ -44,10 +49,19 @@ const MyBandsPage = () => {
       console.error(error)
       setRooms([])
     } else {
-      const formatted = (data || []).map((entry: any) => ({
+      type RawEntry = {
+        chat_room_id: string
+        chat_rooms?: {
+          bands?: {
+            band_number: number
+          }
+        }
+      }
+      
+      const formatted = (data as RawEntry[]).map((entry) => ({
         room_id: entry.chat_room_id,
         band_number: entry.chat_rooms?.bands?.band_number || 0,
-      }))
+      }));
       setRooms(formatted)
     }
     setLoading(false)

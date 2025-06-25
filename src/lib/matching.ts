@@ -1,42 +1,60 @@
-import { Member, Band,} from '@/types/supabase'
+import { Member, Band,Part} from '../types/supabase'
 
+
+const VOICE_PARTS: Part[] = [
+  'Soprano',
+  'Alto',
+  'Tenor',
+  'Baritone',
+  'Bass',
+  'Vocal_Percussion'
+]
 
 // バンドスコアを計算：大学の多様性 + 経験値のバランス - 過去のマッチ被り
 export function calculateBandScore(band: Band): number {
   const universitySet = new Set(band.map(m => m.university))
 
-  // 経験年数の標準偏差
   const experienceAvg = band.reduce((sum, m) => sum + m.experience_years, 0) / band.length
   const experienceStdDev = Math.sqrt(
     band.reduce((sum, m) => sum + Math.pow(m.experience_years - experienceAvg, 2), 0) / band.length
   )
 
-  // 過去にマッチした相手が同じバンドにいる数をカウント
-  const pastMatchPenalty = band.flatMap(m => 
+  const pastMatchPenalty = band.flatMap(m =>
     m.past_matched_ids.filter(id => band.some(b => b.id === id))
   ).length
 
-  const universityScore = universitySet.size / band.length // 最大1
-  const experienceBalanceScore = 1 / (1 + experienceStdDev) // 小さいほど高評価
+  const universityScore = universitySet.size / band.length
+  const experienceBalanceScore = 1 / (1 + experienceStdDev)
   const matchPenalty = pastMatchPenalty
 
   return universityScore * 3 + experienceBalanceScore * 2 - matchPenalty * 2
 }
 
-// 全通りからスコア順に良いバンドを選出
-export function generateBands(members: Member[]): Band[] {
-  const byPart: Record<string, Member[]> = {
-    Soprano: [], Alto: [], Tenor: [], Baritone: [], Bass: [], Vocal_Percussion: []
+// パートごとのメンバーを集計
+function groupMembersByPart(members: Member[]): Record<Part, Member[]> {
+  const byPart: Record<Part, Member[]> = {
+    Soprano: [],
+    Alto: [],
+    Tenor: [],
+    Baritone: [],
+    Bass: [],
+    Vocal_Percussion: []
   }
 
-  for (const m of members) {
-    for (const p of m.part) {
-      if (byPart[p]) {
-        byPart[p].push(m)
-     }
+  for (const member of members) {
+    for (const part of member.part) {
+      if (byPart[part]) {
+        byPart[part].push(member)
+      }
     }
   }
 
+  return byPart
+}
+
+// バンド（6人）を全通り生成し、スコア順に並べる
+export function generateBands(members: Member[]): Band[] {
+  const byPart = groupMembersByPart(members)
   const possibleBands: Band[] = []
 
   for (const sop of byPart.Soprano)
@@ -45,26 +63,18 @@ export function generateBands(members: Member[]): Band[] {
   for (const bari of byPart.Baritone)
   for (const bass of byPart.Bass)
   for (const vp of byPart.Vocal_Percussion) {
-    const band = [sop, alt, ten, bari, bass, vp]
-    const ids = band.map(m => m.id)
-    if (new Set(ids).size === 6) {
-      possibleBands.push(band)
-    }
+    const band: Band = [sop, alt, ten, bari, bass, vp]
+
+    const uniqueIds = new Set(band.map(m => m.id))
+    if (uniqueIds.size < band.length) continue // 重複メンバーがいればスキップ
+
+    possibleBands.push(band)
   }
 
-  possibleBands.sort((a, b) => calculateBandScore(b) - calculateBandScore(a))
-
-  const assigned = new Set<string>()
-  const finalBands: Band[] = []
-
-  for (const band of possibleBands) {
-    if (band.every(m => !assigned.has(m.id))) {
-      band.forEach(m => assigned.add(m.id))
-      finalBands.push(band)
-    }
-  }
-
-  return finalBands
+  return possibleBands
+    .map(band => ({ band, score: calculateBandScore(band) }))
+    .sort((a, b) => b.score - a.score)
+    .map(obj => obj.band)
 }
 
 import { supabase } from './supabase'
