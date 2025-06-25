@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Link from 'next/link'
 import type { Database } from '@/types/supabase'
@@ -12,11 +12,6 @@ type RoomInfo = {
   room_id: ChatRoomMember['chat_room_id']
   band_number: Band['band_number']
 }
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 
 const MyBandsPage = () => {
   const [rooms, setRooms] = useState<RoomInfo[]>([])
