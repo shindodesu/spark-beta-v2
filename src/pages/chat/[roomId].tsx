@@ -20,6 +20,9 @@ const ChatRoom = () => {
   const [input, setInput] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
+  const [userNames, setUserNames] = useState<Record<string, string>>({})
+
+
 
   useEffect(() => {
     const getUser = async () => {
@@ -31,6 +34,32 @@ const ChatRoom = () => {
 
   useEffect(() => {
     if (!roomId || typeof roomId !== 'string') return
+  // ユーザー名を取得
+    const fetchUserNames = async () => {
+      const userIds = Array.from(new Set(messages.map((msg) => msg.sender_id)))
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, name')
+        .in('id', userIds)
+  
+      if (!error && data) {
+        const nameMap: Record<string, string> = {}
+        data.forEach((u) => {
+          nameMap[u.id] = u.name
+        })
+        setUserNames(nameMap)
+      }
+    }
+  
+    fetchUserNames()
+  }, [messages, roomId])
+
+  
+  
+
+  useEffect(() => {
+    if (!roomId || typeof roomId !== 'string') return
+
 
     const loadMessages = async () => {
       const { data, error } = await supabase
@@ -88,6 +117,8 @@ const ChatRoom = () => {
       )
     }
 
+    
+
     setInput('')
   }
 
@@ -104,6 +135,12 @@ const ChatRoom = () => {
                   : 'bg-white/10 text-white backdrop-blur'
               }`}
             >
+              {/* あだ名を表示 */}
+    {msg.sender_id !== userId && (
+      <p className="text-xs text-pink-300 font-semibold mb-1">
+        {userNames[msg.sender_id] || '???'}
+      </p>
+    )}
               <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
               <p className="text-[10px] text-white/50 mt-1 text-right">
                 {new Date(msg.created_at).toLocaleTimeString('ja-JP')}
