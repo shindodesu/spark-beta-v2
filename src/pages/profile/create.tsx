@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/hooks'
 import ProtectedRoute from '../../components/ProtectedRoute'
 import ProfileForm from '../../components/ProfileForm'
-import { User } from '../../types'
+import { User } from '../../types/supabase'
 
 const CreateProfilePage: React.FC = () => {
   const { user, loading } = useAuth()
@@ -28,7 +28,7 @@ const CreateProfilePage: React.FC = () => {
         setError(`プロフィールの取得に失敗しました: ${fetchError.message}`)
       } else if (data) {
         setInitialProfileData({
-          nickname: data.name,
+          name: data.name,
           real_name: data.real_name,
           part: data.part,
           experience_years: data.experience_years,
@@ -49,6 +49,21 @@ const CreateProfilePage: React.FC = () => {
     setError(null)
 
     try {
+      // ✅ クライアント側でも最終確認
+      if (
+        !profileData.name.trim() ||
+        !profileData.real_name.trim() ||
+        !profileData.university.trim() ||
+        profileData.part.length === 0 ||
+        !profileData.region.trim() ||
+        !profileData.experience_years ||
+        !profileData.bio.trim()
+      ) {
+        setError('すべての項目を正しく入力してください。')
+        setIsSubmitting(false)
+        return
+      }
+
       if (!user) {
         setError('ユーザーが認証されていません。再度ログインしてください。')
         router.push('/login')
@@ -58,7 +73,7 @@ const CreateProfilePage: React.FC = () => {
       const { error: upsertError } = await supabase.from('users').upsert(
         {
           id: user.id,
-          name: profileData.nickname,
+          name: profileData.name,
           real_name: profileData.real_name,
           part: profileData.part,
           region: profileData.region,
@@ -98,7 +113,7 @@ const CreateProfilePage: React.FC = () => {
           <ProfileForm
             initialData={
               initialProfileData ?? {
-                nickname: '',
+                name: '',
                 real_name: '',
                 university: '',
                 part: [],

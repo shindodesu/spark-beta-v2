@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
-import type { Member, Part } from './matching' ;
+import type { Member, Part } from '@/types/supabase'; ;
 
 
 
@@ -50,11 +50,11 @@ export async function fetchMembersForMatching(): Promise<Member[]> {
     for (const part of row.part as Part[]) {
       members.push({
         id: row.id,
-        part,
-        nickname : row .id,
+        part: [part],
+        name : row .id,
         university: row.university ?? '不明',
         experience_years: row.experience_years ?? 0,
-        pastMatchedWith: row.past_matched_ids ?? [],
+        past_matched_ids: row.past_matched_ids ?? [],
       })
     }
   })

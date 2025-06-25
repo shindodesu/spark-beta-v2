@@ -136,3 +136,5 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp }) => {
 }
 
 export default AuthForm
+
+

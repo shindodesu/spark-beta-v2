@@ -4,7 +4,7 @@ import Head from 'next/head'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/hooks'
 import ProtectedRoute from '../../components/ProtectedRoute'
-import { User } from '../../types'
+import { User } from '../../types/supabase'
 import Link from 'next/link'
 
 const ViewProfilePage: React.FC = () => {
@@ -34,7 +34,7 @@ const ViewProfilePage: React.FC = () => {
       if (data) {
         setProfileData({
           id: data.id,
-          nickname: data.name,
+          name: data.name,
           real_name: data.real_name,
           email: data.email,
           part: data.part,
@@ -88,7 +88,7 @@ const ViewProfilePage: React.FC = () => {
         <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-xl text-white w-full max-w-lg">
           <h2 className="text-2xl font-bold mb-6 text-center drop-shadow-sm">あなたのプロフィール</h2>
           <div className="space-y-4 text-white/90">
-            <p><strong>あだ名：</strong>{profileData.nickname}</p>
+            <p><strong>あだ名：</strong>{profileData.name}</p>
             <p><strong>本名：</strong>{profileData.real_name}</p>
             <p><strong>大学名：</strong>{profileData.university}</p>
             <p><strong>パート：</strong>{profileData.part?.join(', ')}</p>

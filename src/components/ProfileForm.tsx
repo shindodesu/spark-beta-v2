@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { User } from '../types'
+import { User } from '../types/supabase'
 
 type ProfileFormData = Omit<User, 'id' | 'email'>
 
@@ -27,19 +27,19 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   isSubmitting,
   error
 }) => {
-  const [nickname, setNickname] = useState(initialData?.nickname || '')
+  const [name, setNickname] = useState(initialData?.name || '')
   const [realName, setRealName] = useState(initialData?.real_name || '')
   const [university, setUniversity] = useState(initialData?.university || '')
   const [selectedParts, setSelectedParts] = useState<string[]>(initialData?.part || [])
   const [region, setRegion] = useState(initialData?.region || '')
-  // ✅ string にして空欄許可
   const [experienceYears, setExperienceYears] = useState(
     initialData?.experience_years?.toString() || ''
   )
   const [bio, setBio] = useState(initialData?.bio || '')
+  const [validationError, setValidationError] = useState<string | null>(null)
 
   useEffect(() => {
-    setNickname(initialData?.nickname || '')
+    setNickname(initialData?.name || '')
     setRealName(initialData?.real_name || '')
     setUniversity(initialData?.university || '')
     setSelectedParts(initialData?.part || [])
@@ -57,13 +57,29 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setValidationError(null)
+
+    // ✅ 必須項目のバリデーション
+    if (
+      !name.trim() ||
+      !realName.trim() ||
+      !university.trim() ||
+      selectedParts.length === 0 ||
+      !region.trim() ||
+      !experienceYears.trim() ||
+      !bio.trim()
+    ) {
+      setValidationError('すべての項目を入力してください。')
+      return
+    }
+
     await onSubmit({
       real_name: realName,
-      nickname,
+      name,
       university,
       part: selectedParts,
       region,
-      experience_years: parseInt(experienceYears) || 0, // ✅ 送信時だけ数値に
+      experience_years: parseInt(experienceYears) || 0,
       bio
     })
   }
@@ -78,7 +94,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           type="text"
           id="nickname"
           className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-white"
-          value={nickname}
+          value={name}
           onChange={(e) => setNickname(e.target.value)}
           required
         />
@@ -181,7 +197,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
         />
       </div>
 
-      {error && <p className="text-red-300 text-sm text-center">{error}</p>}
+      {validationError && (
+        <p className="text-red-300 text-sm text-center">{validationError}</p>
+      )}
+
+      {error && (
+        <p className="text-red-300 text-sm text-center">{error}</p>
+      )}
 
       <button
         type="submit"
