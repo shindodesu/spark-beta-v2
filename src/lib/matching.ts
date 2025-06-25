@@ -1,15 +1,6 @@
 import { Member, Band,Part} from '../types/supabase'
 
 
-const VOICE_PARTS: Part[] = [
-  'Soprano',
-  'Alto',
-  'Tenor',
-  'Baritone',
-  'Bass',
-  'Vocal_Percussion'
-]
-
 // バンドスコアを計算：大学の多様性 + 経験値のバランス - 過去のマッチ被り
 export function calculateBandScore(band: Band): number {
   const universitySet = new Set(band.map(m => m.university))
