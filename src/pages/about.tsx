@@ -10,8 +10,8 @@ export default function About() {
         <Image
           src="/spark_greeting_by_bad_note.JPG" // ロゴのファイル名に合わせて
           alt="Spark副代表挨拶"
-          width={120} // お好みのサイズ
-          height={120}
+          width={240} // お好みのサイズ
+          height={240}
           className="rounded-lg"
         />
       </div>
