@@ -81,7 +81,7 @@ export default function About() {
         </p>
 
         <p className="mt-10 text-right text-sm text-white/70">
-        — Written by Kosuke Shindo <br />(Acoustic Design, School of Design, Kyushu University<br /> / Spark β Developer)
+        — Written by Kosuke Shindo <br />(Acoustic Design, School of Design, <br /> Kyushu University/ Spark β Developer)
 
         </p>
       </section>
