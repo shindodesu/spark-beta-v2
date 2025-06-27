@@ -60,8 +60,6 @@ export default function CreditsPage() {
           <div>
             <h2 className="text-xl font-semibold text-pink-300 mb-2">💡 フィードバック・アイデア協力</h2>
             <ul className="list-disc list-inside text-white/90">
-              <li>@example_user (Twitter)</li>
-              <li>中村健</li>
             </ul>
           </div>
         </section>
