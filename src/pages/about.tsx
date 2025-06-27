@@ -8,8 +8,8 @@ export default function About() {
       {/* ✅ ロゴを追加 */}
       <div className="mb-6 flex justify-center">
         <Image
-          src="/spark-beta-logo.png" // ロゴのファイル名に合わせて
-          alt="Spark β ロゴ"
+          src="/spark_greeting_by_bad_note.JPG" // ロゴのファイル名に合わせて
+          alt="Spark副代表挨拶"
           width={120} // お好みのサイズ
           height={120}
           className="rounded-lg"
@@ -21,22 +21,26 @@ export default function About() {
 
       <section className="space-y-6 text-lg leading-loose text-white/90">
         <p>
-          Spark β は、<br />
+          こんにちは！<br />
+          2025年九州・山口アカペラ同期ライブSparkの副代表だった進藤(バッド)です。
+        </p>
+        <p>
+          Spark β 及び同期ライブSparkのシャッフル企画は、<br />
           「もっと気軽に、でも本質的に、音を楽しめる仲間を見つけたい」<br />
-          そんな思いから生まれました。
+          そんな思いから生まれました。<br />
         </p>
 
         <p>
           これまでの音楽コミュニティには、<br />
-          「閉じた雰囲気」や「同調圧力に縛られる空気」みたいなルールが多くて、<br />
+          「閉じた雰囲気」や「同調圧力が正義」みたいなルールが多くて、<br />
           本当に面白い音や出会いが埋もれてしまうことがありました。
         </p>
 
         <p>
-        けど、そんな時代は俺で終わりにする。<br />
-芸術工学（音響設計専攻）の知見と IT 技術を掛け合わせて、<br />
-まだ誰も作らなかった仕組みを生み出した。<br />
-それが Spark β です。
+        けど、そんな時代は僕が終わらせたい。<br />
+        芸術工学（音響設計専攻）の知見と IT 技術を掛け合わせて、<br />
+        まだ誰も作らなかった仕組みを生み出した。<br />
+        それが Spark β です。
         </p>
 
         <h2 className="text-2xl font-bold mt-10 mb-2">
@@ -77,7 +81,7 @@ export default function About() {
         </p>
 
         <p className="mt-10 text-right text-sm text-white/70">
-        — Written by Kosuke Shindo (Acoustic Design, School of Design, Kyushu University / Spark β Developer)
+        — Written by Kosuke Shindo <br />(Acoustic Design, School of Design, Kyushu University<br /> / Spark β Developer)
 
         </p>
       </section>

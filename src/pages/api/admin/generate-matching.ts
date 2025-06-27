@@ -52,12 +52,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           console.error('Chat room insert error:', roomError)
           continue
         }
+
+        for (const member of band) {
+          const newIds = band
+            .map((m) => m.id)
+            .filter((id) => id !== member.id)
         
+          // 既存の past_matched_ids を取得
+          const { data: existing, error: fetchError } = await supabase
+            .from('users')
+            .select('past_matched_ids')
+            .eq('id', member.id)
+            .single()
+        
+          if (fetchError || !existing) continue
+        
+          const merged = Array.from(new Set([...(existing.past_matched_ids || []), ...newIds]))
+        
+          await supabase
+            .from('users')
+            .update({ past_matched_ids: merged })
+            .eq('id', member.id)
+        }
 
       if (roomError) {
         console.error('Chat room insert error:', roomError)
         continue
+
+        
       }
+      
     }
 
     return res.status(200).json({ message: 'Matching generated successfully' })

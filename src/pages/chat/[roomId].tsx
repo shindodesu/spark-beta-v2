@@ -21,6 +21,49 @@ const ChatRoom = () => {
   const [userId, setUserId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const [userNames, setUserNames] = useState<Record<string, string>>({})
+  const [myPart, setMyPart] = useState<string | null>(null)
+  
+
+
+
+
+  //担当パートの取得
+  useEffect(() => {
+    const fetchMyPart = async () => {
+      if (!roomId || typeof roomId !== 'string' || !userId) return
+  
+      // chat_room から band_id を取得
+      const { data: roomData, error: roomError } = await supabase
+        .from('chat_rooms')
+        .select('band_id')
+        .eq('id', roomId)
+        .single()
+  
+      if (roomError || !roomData?.band_id) return
+  
+      const bandId = roomData.band_id
+  
+      // band から members[] を取得
+      const { data: bandData, error: bandError } = await supabase
+        .from('bands')
+        .select('members')
+        .eq('id', bandId)
+        .single()
+  
+      if (bandError || !bandData?.members) return
+  
+      const parts = ['Soprano', 'Alto', 'Tenor', 'Baritone', 'Bass', 'Vocal_Percussion']
+      const myIndex = bandData.members.findIndex((id: string) => id === userId)
+  
+      if (myIndex >= 0) {
+        setMyPart(parts[myIndex])
+      }
+    }
+  
+    fetchMyPart()
+  }, [roomId, userId])
+  
+
 
 
 
@@ -126,6 +169,22 @@ const ChatRoom = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] text-white flex flex-col">
       <div className="flex-grow overflow-y-auto px-4 py-6">
         <div className="max-w-2xl mx-auto space-y-3">
+        <div className="bg-white/10 text-sm text-white p-4 rounded-lg mb-6 shadow-md backdrop-blur">
+        👋 バンドメンバーの皆さん、こんにちは！<br />
+        このチャットは<strong>初回の顔合わせ調整</strong>にご活用ください。<br />
+        <br />
+        📝 あなたの担当パート：<strong>{myPart ?? '読み込み中...'}</strong><br />
+        <br />
+        📝 おすすめステップ：<br />
+        1. <strong>まずは自己紹介</strong>（名前、担当パート、好きな音楽など）<br />
+        2. <strong>調整さん等で日程調整</strong><br />
+        3. <strong>Zoomで顔合わせ</strong><br />
+        4. <strong>LINEグループを作成して以降の連絡へ</strong><br />
+        <br />
+        積極的に自己紹介をして、みんなで楽しいバンド活動を始めましょう！<br />
+        <br />
+        💬 もしLINEが難しい場合は、このチャット内でやりとりを続けても大丈夫です！
+        </div>
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -153,11 +212,15 @@ const ChatRoom = () => {
 
       <form onSubmit={handleSubmit} className="bg-white/10 backdrop-blur p-4 sticky bottom-0 w-full">
         <div className="max-w-2xl mx-auto flex space-x-2">
-          <input
+          <textarea
             className="flex-grow px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-pink-400"
             placeholder="メッセージを入力..."
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {setInput(e.target.value)
+              e.target.style.height = 'auto'  // これで縮む
+              e.target.style.height = `${e.target.scrollHeight}px`  // 入力に応じて伸びる}
+            }}
+            rows={1}
           />
           <button
             type="submit"

@@ -13,6 +13,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [menuVisible, setMenuVisible] = useState(false)
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -36,6 +37,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     location.reload()
   }
 
+  const openMenu = () => {
+    setMenuVisible(true)
+    setTimeout(() => setMenuOpen(true), 10) // 軽く遅延して transition を確実に発火
+  }
+  
+  const closeMenu = () => {
+    setMenuOpen(false)
+    setTimeout(() => setMenuVisible(false), 300) // 300ms = CSSアニメ時間と一致
+  }
+  
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#1e3c72] to-[#2a5298] text-white font-sans">
       {/* ヘッダー */}
@@ -56,7 +68,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* ハンバーガー */}
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={openMenu}
             className="flex flex-col space-y-1 sm:hidden"
           >
             <span className="block w-6 h-0.5 bg-white"></span>
@@ -70,6 +82,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link href="/howto" className="hover:text-pink-300 transition">使い方ガイド</Link>
             <Link href="/profile/view" className="hover:text-pink-300 transition">プロフィール</Link>
             <Link href="/my-bands" className="hover:text-pink-300 transition">マイバンド</Link>
+            <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-pink-300 transition"
+            >
+           お問い合わせ
+           </a>
             {!user && (
               <>
                 <Link href="/login" className="hover:text-pink-300 transition">ログイン</Link>
@@ -98,15 +118,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* モバイルドロワー */}
       <div
-        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur transition-opacity ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        onClick={() => setMenuOpen(false)}
+         className={`fixed inset-0 z-40 bg-black/50 backdrop-blur transition-opacity duration-300 ${
+          menuVisible ? 'visible' : 'invisible'
+        } ${menuOpen ? 'opacity-100' : 'opacity-0'}`}
+        onClick={closeMenu}
       >
         <div
-          className={`fixed top-0 right-0 w-64 h-full bg-[#1e3c72] p-6 shadow-lg flex flex-col space-y-4 transform transition-transform duration-300 ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-          onClick={(e) => e.stopPropagation()}
+         className={`fixed top-0 right-0 w-64 h-full bg-[#1e3c72] p-6 shadow-lg flex flex-col space-y-4 transform transition-transform duration-300 ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+         onClick={(e) => e.stopPropagation()}
         >
           <button
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
             className="text-white text-right mb-4"
           >
             ✕ 閉じる
@@ -116,6 +138,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Link href="/howto" className="hover:text-pink-300 transition">使い方ガイド</Link>
           <Link href="/profile/view" className="hover:text-pink-300 transition">プロフィール</Link>
           <Link href="/my-bands" className="hover:text-pink-300 transition">マイバンド</Link>
+          <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-pink-300 transition"
+          >
+         お問い合わせ
+          </a>
           {!user && (
             <>
               <Link href="/login" className="hover:text-pink-300 transition">ログイン</Link>
@@ -148,8 +178,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* フッター */}
       <footer className="bg-white/10 backdrop-blur-md text-white text-center py-4 text-sm">
-        &copy; {new Date().getFullYear()} Spark β
-      </footer>
+  <div className="flex justify-center items-center gap-4">
+    <span>&copy; {new Date().getFullYear()} Spark β</span>
+    <Link href="/credits" className="text-white/70 text-xs hover:text-pink-300">
+      credits
+    </Link>
+  </div>
+</footer>
+
+
     </div>
   )
 }

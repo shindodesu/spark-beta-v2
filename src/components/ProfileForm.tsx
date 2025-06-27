@@ -10,6 +10,31 @@ interface ProfileFormProps {
   error: string | null
 }
 
+const CIRCLES = [
+  '山口大学, Sing A Song',
+  '下関市立大学, A cappe*love',
+  '福岡大学, はるもにあ',
+  '福岡教育大学, Acord',
+  '九州大学, HarmoQ',
+  '久留米大学, はないちもんめ',
+  '西南学院大学, Sains voice',
+  '九州女子大学, ぴんかーず',
+  '北九州市立大学, アカペラの森',
+  '佐賀大学, Score!!',
+  '西九州大学, Voce',
+  '熊本大学, Higo-Pella',
+  '熊本県立大学, 歌唄〜うたうばい~',
+  '長崎大学, はもねぴあ',
+  '宮崎大学, B.O.I',
+  '宮崎大学, Landing',
+  '宮崎公立大学, EPOCH',
+  '鹿児島大学, 如何様ライダー',
+  '琉球大学, うたゆん',
+  '九州アカペラサークルCUE',
+  'その他',
+  '無所属',
+]
+
 const PARTS = ['Soprano', 'Alto', 'Tenor', 'Baritone', 'Bass', 'Vocal_Percussion']
 const REGIONS = [
   '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
@@ -116,16 +141,22 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 
       <div>
         <label htmlFor="university" className="block text-sm mb-1 text-white/80">
-          大学名
+          所属サークル(メイン)
         </label>
-        <input
-          type="text"
+        <select
           id="university"
           className="w-full px-4 py-2 rounded bg-white/20 backdrop-blur-md placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-white"
           value={university}
           onChange={(e) => setUniversity(e.target.value)}
           required
-        />
+          >
+          <option value="">選択してください</option>
+          {CIRCLES.map((circle) => (
+          <option key={circle} value={circle}>
+          {circle}
+          </option>
+          ))}
+        </select>
       </div>
 
       <div>
