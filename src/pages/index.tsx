@@ -207,7 +207,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
             </span>
             <div className="mt-4 text-right">
               <Link href={`/events/${event.id}/apply`} className="text-pink-300 hover:text-pink-200 font-semibold">
-                詳細を見る →
+                参加したい！ →
               </Link>
             </div>
           </div>
