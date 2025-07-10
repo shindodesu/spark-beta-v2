@@ -84,7 +84,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
   <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
     <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow mb-4">Spark β</h1>
     <p className="text-white text-lg md:text-2xl font-light drop-shadow">
-      音文化の体験を自由にする場所、ここから始まる。
+      音の体験を自由にする場所、ここから始まる。
     </p>
   </div>
 </div>
