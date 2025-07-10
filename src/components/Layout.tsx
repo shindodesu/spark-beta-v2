@@ -69,6 +69,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link href="/howto" className="hover:text-pink-300 transition">使い方ガイド</Link>
             <Link href="/profile/view" className="hover:text-pink-300 transition">プロフィール</Link>
             <Link href="/my-bands" className="hover:text-pink-300 transition">トークルーム</Link>
+            <Link href="/interviews" className="hover:text-pink-300 transition">利用者の声</Link>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
               target="_blank"
@@ -116,6 +117,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link href="/howto" className="hover:text-pink-300 transition">使い方ガイド</Link>
             <Link href="/profile/view" className="hover:text-pink-300 transition">プロフィール</Link>
             <Link href="/my-bands" className="hover:text-pink-300 transition">トークルーム</Link>
+            <Link href="/interviews" className="hover:text-pink-300 transition">利用者の声</Link>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
               target="_blank"

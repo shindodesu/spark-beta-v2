@@ -16,7 +16,11 @@ interface Event {
   location: string | null
   status: 'upcoming' | 'active' | 'past' | 'cancelled'
   created_at: string
+  applicantsCount: number  // ← 応募人数
+  matchedCount: number     // ← マッチ人数
 }
+
+
 
 interface HomeProps {
   events: Event[]
@@ -69,11 +73,26 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
       </Head>
 
       <div className="flex flex-col items-center justify-center text-center py-12 px-6">
+      <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden mb-12">
+  <Image
+    src="/Spark_banner.jpg"
+    alt="Spark β イベント"
+    layout="fill"
+    objectFit="cover"
+    className="brightness-[0.75]"
+  />
+  <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+    <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow mb-4">Spark β</h1>
+    <p className="text-white text-lg md:text-2xl font-light drop-shadow">
+      音文化の体験を自由にする場所、ここから始まる。
+    </p>
+  </div>
+</div>
         <Image
           src="/spark-beta-logo.png"
           alt="Spark β Logo"
-          width={120}
-          height={120}
+          width={240}
+          height={240}
           className="mb-6 drop-shadow-lg"
         />
         <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-md">
@@ -83,7 +102,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
           Sparkからその先へ。
         </p>
         <p className="text-base text-white/70 mb-8 max-w-xl">
-          アカペラをやりたい人同士が、<strong>企画</strong>と<strong>場所</strong>ベースでマッチングし、<br />
+          音文化を楽しみたい人同士が、<strong>企画</strong>と<strong>場所</strong>ベースでマッチングし、<br />
           シャッフルバンドを結成できるプラットフォーム。
           <Link href="/about" className="text-sm underline text-white/80 hover:text-white transition">
             …もっと読む
@@ -124,73 +143,162 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
             </Link>
           </div>
         )}
+<div className="w-full max-w-4xl mx-auto mb-16">
+  <h2 className="text-2xl font-bold text-white text-center mb-6">📸 イベントの様子</h2>
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    {['Spark_group_photo.jpg','Spark_shuffle_band_1.jpg','Spark_shuffle_band_2.jpg'].map((img, i) => (
+      <div key={i} className="relative aspect-[4/3] rounded-lg overflow-hidden shadow">
+        <Image
+          src={`/${img}`}
+          alt={`イベント写真${i + 1}`}
+          layout="fill"
+          objectFit="cover"
+          className="blur-sm" // 👈 ここがぼかし！
+        />
+      </div>
+    ))}
+  </div>
+</div>
 
-        <div className="w-full max-w-4xl">
-          <h2 className="text-3xl font-bold text-white text-center mb-6 drop-shadow-md">
-            開催中・開催予定イベント
-          </h2>
 
-          {events.length === 0 ? (
-            <p className="text-center text-white/70 text-lg">
-              現在、開催予定のイベントはありません。
+       {/* イベント一覧表示 */}
+<div className="w-full max-w-4xl">
+  <h2 className="text-3xl font-bold text-white text-center mb-6 drop-shadow-md">
+    開催中・開催予定イベント
+  </h2>
+  {events.length === 0 ? (
+    <p className="text-center text-white/70 text-lg">
+      現在、開催予定のイベントはありません。
+    </p>
+  ) : (
+    <>
+      {/* 開催中・予定 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        {events.filter(e => e.status !== 'past').map((event) => (
+          <div
+            key={event.id}
+            className="bg-white/10 backdrop-blur-md rounded-lg p-6 text-white shadow-md hover:shadow-lg transition"
+          >
+            <h3 className="text-xl font-bold mb-2">{event.event_name}</h3>
+            <p className="text-sm mb-1">
+              <span className="font-medium">開催日:</span>{' '}
+              {new Date(event.event_date).toLocaleDateString('ja-JP')}
             </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white/10 backdrop-blur-md rounded-lg p-6 text-white shadow-md hover:shadow-lg transition"
-                >
-                  <h3 className="text-xl font-bold mb-2">{event.event_name}</h3>
-                  <p className="text-sm mb-1">
-                    <span className="font-medium">開催日:</span>{' '}
-                    {new Date(event.event_date).toLocaleDateString('ja-JP')}
-                  </p>
-                  {event.location && (
-                    <p className="text-sm mb-1">
-                      <span className="font-medium">場所:</span> {event.location}
-                    </p>
-                  )}
-                  {event.description && (
-                    <p className="text-sm text-white/80 mt-2 mb-4">
-                      {event.description}
-                    </p>
-                  )}
-                  <span
-                    className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
-                      event.status === 'upcoming'
-                        ? 'bg-blue-300 text-blue-900'
-                        : event.status === 'active'
-                        ? 'bg-green-300 text-green-900'
-                        : event.status === 'cancelled'
-                        ? 'bg-red-300 text-red-900'
-                        : 'bg-gray-300 text-gray-900'
-                    }`}
-                  >
-                    {event.status === 'upcoming'
-                      ? '開催予定'
-                      : event.status === 'active'
-                      ? '開催中'
-                      : event.status === 'cancelled'
-                      ? '中止'
-                      : '終了'}
-                  </span>
-                  <div className="mt-4 text-right">
-                    <Link
-                      href={`/events/${event.id}/apply`}
-                      className="text-pink-300 hover:text-pink-200 font-semibold"
-                    >
-                      詳細を見る →
-                    </Link>
-                  </div>
-                </div>
-              ))}
+            {event.location && (
+              <p className="text-sm mb-1">
+                <span className="font-medium">場所:</span> {event.location}
+              </p>
+            )}
+            <p className="text-sm mb-1">
+              <span className="font-medium">応募人数:</span> {event.applicantsCount ?? 0} 人
+            </p>
+            <p className="text-sm mb-1">
+              <span className="font-medium">マッチ人数:</span> {event.matchedCount ?? 0} 人
+            </p>
+            {event.description && (
+              <p className="text-sm text-white/80 mt-2 mb-4">{event.description}</p>
+            )}
+            <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
+              event.status === 'upcoming'
+                ? 'bg-blue-300 text-blue-900'
+                : 'bg-green-300 text-green-900'
+            }`}>
+              {event.status === 'upcoming' ? '開催予定' : '開催中'}
+            </span>
+            <div className="mt-4 text-right">
+              <Link href={`/events/${event.id}/apply`} className="text-pink-300 hover:text-pink-200 font-semibold">
+                詳細を見る →
+              </Link>
             </div>
-          )}
-        </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 終了イベント */}
+      <h2 className="text-2xl font-bold text-white text-center mb-4 drop-shadow-md">
+        終了イベント（実績）
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {events.filter(e => e.status === 'past').map((event) => (
+          <div
+            key={event.id}
+            className="bg-white/5 backdrop-blur-md rounded-lg p-6 text-white shadow-sm hover:shadow-md transition"
+          >
+            <h3 className="text-xl font-bold mb-2">{event.event_name}</h3>
+            <p className="text-sm mb-1">
+              <span className="font-medium">開催日:</span>{' '}
+              {new Date(event.event_date).toLocaleDateString('ja-JP')}
+            </p>
+            {event.location && (
+              <p className="text-sm mb-1">
+                <span className="font-medium">場所:</span> {event.location}
+              </p>
+            )}
+            <p className="text-sm mb-1">
+              <span className="font-medium">応募人数:</span> {event.applicantsCount ?? 0} 人
+            </p>
+            <p className="text-sm mb-1">
+              <span className="font-medium">マッチ人数:</span> {event.matchedCount ?? 0} 人
+            </p>
+            {event.description && (
+              <p className="text-sm text-white/80 mt-2 mb-4">{event.description}</p>
+            )}
+            <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-gray-300 text-gray-900">
+              終了
+            </span>
+          </div>
+        ))}
       </div>
     </>
+  )}
+</div>
+{/* 各ページへの導線セクション */}
+<div className="w-full max-w-4xl mb-16">
+  <h2 className="text-2xl font-bold text-white text-center mb-6 drop-shadow-md">
+    Spark β をもっと知る
+  </h2>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <Link href="/about" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
+      <h3 className="text-xl font-bold text-pink-300 mb-2">Spark β について</h3>
+      <p className="text-sm text-white/80">
+        サービスの思想や立ち上げの経緯を紹介。なぜSpark βなのか。
+      </p>
+    </Link>
+
+    <Link href="/howto" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
+      <h3 className="text-xl font-bold text-pink-300 mb-2">使い方ガイド</h3>
+      <p className="text-sm text-white/80">
+        サインアップからバンド結成・参加までの流れを丁寧に解説。
+      </p>
+    </Link>
+
+    <Link href="/interviews" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
+      <h3 className="text-xl font-bold text-pink-300 mb-2">利用者の声</h3>
+      <p className="text-sm text-white/80">
+        実際に参加した人たちのリアルな声。バンド参加のきっかけとは？
+      </p>
+    </Link>
+
+    <a
+      href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow"
+    >
+      <h3 className="text-xl font-bold text-pink-300 mb-2">お問い合わせ</h3>
+      <p className="text-sm text-white/80">
+        バグ報告、フィードバック、コラボの相談などはこちらから。
+      </p>
+    </a>
+  </div>
+</div>
+
+      </div>
+      
+    </>
   )
+  
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
@@ -198,14 +306,57 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     .from('events')
     .select('*')
     .order('event_date', { ascending: true })
-    .neq('status', 'past')
 
-  if (error) {
+  if (error || !events) {
     console.error('Error fetching events:', error)
     return { props: { events: [] }, revalidate: 60 }
   }
 
-  return { props: { events: events || [] }, revalidate: 60 }
+   // 手動で上書きするイベントIDと数を定義
+  const manualStats: Record<string, { applicants: number; matched: number }> = {
+    'f67b0f74-59b6-4ec0-84d2-3cc7609e3fb9': { applicants: 40, matched: 12 }, // ←ここを実際のevent.idに
+  }
+
+
+   // 応募数・マッチ数の付加
+   const enhancedEvents = await Promise.all(
+    events.map(async (event) => {
+      const manual = manualStats[event.id]
+
+      if (manual) {
+        return {
+          ...event,
+          applicantsCount: manual.applicants,
+          matchedCount: manual.matched,
+        }
+      }
+
+      const { count: applicantsCount } = await supabase
+        .from('event_participants')
+        .select('user_id', { count: 'exact', head: true })
+        .eq('event_id', event.id)
+
+      const { count: matchedCount } = await supabase
+        .from('bands')
+        .select('id', { count: 'exact', head: true })
+        .eq('event_id', event.id)
+
+      return {
+        ...event,
+        applicantsCount: applicantsCount ?? 0,
+        matchedCount: matchedCount ?? 0,
+      }
+    })
+  )
+
+  return {
+    props: {
+      events: enhancedEvents,
+    },
+    revalidate: 60, // ISRで1分ごとに再生成
+  }
+  
 }
+
 
 export default HomePage
