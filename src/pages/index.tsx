@@ -280,7 +280,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
       </p>
     </Link>
 
-    <Link href="/howto" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
+    <Link href="/my-bands" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
       <h3 className="text-xl font-bold text-pink-300 mb-2">あなたのバンド</h3>
       <p className="text-sm text-white/80">
         まだバンドがありませんか？イベントの参加表明をして新しい仲間と楽しもう！
