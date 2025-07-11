@@ -303,8 +303,15 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
     iOSはSafariで、AndroidはChromeで「ホーム画面に追加」からどうぞ。
   </p>
 </div>
-
-
+<Link
+  href="/credits"
+  className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow"
+>
+  <h3 className="text-xl font-bold text-pink-300 mb-2">credits</h3>
+  <p className="text-sm text-white/80">
+    Spark β の開発・運営・テストに関わってくれた皆さまに感謝を込めて。
+  </p>
+</Link>
     <a
       href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
       target="_blank"
@@ -318,6 +325,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
     </a>
   </div>
 </div>
+
 
       </div>
       
