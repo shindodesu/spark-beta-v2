@@ -60,6 +60,7 @@ export default function CreditsPage() {
           <div>
             <h2 className="text-xl font-semibold text-pink-300 mb-2">💡 フィードバック・アイデア協力</h2>
             <ul className="list-disc list-inside text-white/90">
+            <li>石澤一真（仙台高専OB）</li>
             </ul>
           </div>
         </section>
