@@ -12,7 +12,7 @@ export default function HowToUse() {
   
           <li>
             <span className="font-bold">👤 2. プロフィールを登録</span><br />
-            ・あだ名、本名（非公開）、大学名、パート、経験年数、地域を記入<br />
+            ・あだ名、本名（非公開）、所属、パート、経験年数、地域を記入<br />
             ・必要なら自己紹介も書く
           </li>
   

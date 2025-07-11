@@ -6,6 +6,7 @@ import { GetStaticProps } from 'next'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import dynamic from 'next/dynamic'
 
 
 interface Event {
@@ -280,12 +281,30 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
       </p>
     </Link>
 
+    <Link href="/howto" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
+      <h3 className="text-xl font-bold text-pink-300 mb-2">あなたのバンド</h3>
+      <p className="text-sm text-white/80">
+        まだバンドがありませんか？イベントの参加表明をして新しい仲間と楽しもう！
+      </p>
+    </Link>
+
     <Link href="/interviews" className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
       <h3 className="text-xl font-bold text-pink-300 mb-2">利用者の声</h3>
       <p className="text-sm text-white/80">
         実際に参加した人たちのリアルな声。バンド参加のきっかけとは？
       </p>
     </Link>
+
+    <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg hover:bg-white/20 transition shadow">
+  <h3 className="text-xl font-bold text-pink-300 mb-2">ホーム画面に追加</h3>
+  <p className="text-sm text-white/80 mb-2">
+    スマートフォンからすぐにアクセスできるように、共有ボタンを押してSpark β を今すぐホーム画面に追加しましょう！
+  </p>
+  <p className="text-xs text-white/50 italic">
+    iOSはSafariで、AndroidはChromeで「ホーム画面に追加」からどうぞ。
+  </p>
+</div>
+
 
     <a
       href="https://docs.google.com/forms/d/e/1FAIpQLSf8GY_PvIwBfh4W6-Mq-xIBRWDgj4eQ2262Vbk-mjKKlPR29Q/viewform?usp=dialog"
