@@ -6,7 +6,6 @@ import { GetStaticProps } from 'next'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
-import dynamic from 'next/dynamic'
 
 
 interface Event {
