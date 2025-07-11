@@ -6,15 +6,19 @@ export default function About() {
   return (
     <main className="max-w-3xl mx-auto p-6 text-white">
       {/* ✅ ロゴを追加 */}
-      <div className="mb-6 flex justify-center">
-        <Image
-          src="/spark_greeting_by_bad_note.JPG" // ロゴのファイル名に合わせて
-          alt="Spark副代表挨拶"
-          width={240} // お好みのサイズ
-          height={240}
-          className="rounded-lg"
-        />
-      </div>
+  {/* 写真エリア：ネオングラス風ボックス */}
+  <div className="mb-10 flex justify-center">
+  <div className="w-72 h-72 overflow-hidden rounded-xl bg-white/10 backdrop-blur-sm ring-1 ring-white/30 shadow-md">
+    <Image
+      src="/spark_greeting_by_bad_note.JPG"
+      alt="Spark副代表挨拶"
+      width={288}
+      height={288}
+      className="object-cover object-top w-full h-full"
+    />
+  </div>
+</div>
+
       <h1 className="text-4xl font-bold mb-6 drop-shadow-md">
         Spark β について
       </h1>
@@ -22,10 +26,10 @@ export default function About() {
       <section className="space-y-6 text-lg leading-loose text-white/90">
         <p>
           こんにちは！<br />
-          2025年九州・山口アカペラ同期ライブSparkの副代表だった進藤(バッド)です。
+          Spark β を作った人、進藤(バッド)です。
         </p>
         <p>
-          Spark β 及び同期ライブSparkのシャッフル企画は、<br />
+          Spark β は<br />
           「もっと気軽に、でも本質的に、音を楽しめる仲間を見つけたい」<br />
           そんな思いから生まれました。<br />
         </p>

@@ -68,33 +68,37 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
     <>
       <Head>
         <title>Spark β</title>
-        <meta name="description" content="アカペラのバンドマッチングプラットフォーム Spark β" />
+        <meta name="description" content="音文化プラットフォーム Spark β" />
         <link rel="icon" href="/spark-beta-logo.png" />
       </Head>
 
       <div className="flex flex-col items-center justify-center text-center py-12 px-6">
       <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden mb-12">
+  <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden mb-12">
   <Image
-    src="/Spark_banner.jpg"
-    alt="Spark β イベント"
+    src="/Spark_group_photo.jpg"
+    alt="Spark β グループ写真"
     layout="fill"
     objectFit="cover"
-    className="brightness-[0.75]"
+    className="mb-6 rounded-xl drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] blur-sm brightness-[0.7]"
   />
   <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
     <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow mb-4">Spark β</h1>
     <p className="text-white text-lg md:text-2xl font-light drop-shadow">
-      音の体験を自由にする場所、ここから始まる。
+      音の体験を自由にする場所、<br/>ここから始まる。
     </p>
   </div>
 </div>
-        <Image
-          src="/spark-beta-logo.png"
-          alt="Spark β Logo"
-          width={240}
-          height={240}
-          className="mb-6 drop-shadow-lg"
-        />
+</div>
+<Image
+  src="/spark-beta-logo.png"
+  alt="Spark β Logo"
+  width={240}
+  height={240}
+  className="mb-6 rounded-xl drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+ />
+
+
         <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-md">
           Spark β
         </h1>
@@ -215,7 +219,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
       </div>
 
       {/* 終了イベント */}
-      <h2 className="text-2xl font-bold text-white text-center mb-4 drop-shadow-md">
+      <h2 className="text-2xl font-bold text-white text-center mb-4 drop-shadow-md mt-16">
         終了イベント（実績）
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -252,6 +256,9 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
     </>
   )}
 </div>
+
+<div className="h-16" /> {/* ← セクション間に余白追加 */}
+
 {/* 各ページへの導線セクション */}
 <div className="w-full max-w-4xl mb-16">
   <h2 className="text-2xl font-bold text-white text-center mb-6 drop-shadow-md">
