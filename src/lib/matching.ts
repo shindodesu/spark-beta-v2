@@ -62,10 +62,13 @@ export function generateBands(members: Member[]): Band[] {
     possibleBands.push(band)
   }
 
-  return possibleBands
+  // スコア順にソート
+  const sortedBands = possibleBands
     .map(band => ({ band, score: calculateBandScore(band) }))
     .sort((a, b) => b.score - a.score)
     .map(obj => obj.band)
+
+  return sortedBands
 }
 
 import { supabase } from './supabase'

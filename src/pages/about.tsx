@@ -68,7 +68,7 @@ export default function About() {
         <h2 className="text-2xl font-bold mt-10 mb-2">🚀 これから</h2>
         <div className="space-y-4">
           <p>
-            まだまだ β 版なので、<br />
+            まだまだ、駆け出しなので、<br />
             みなさんの声を聞きながら育てていきます。
           </p>
           <p>

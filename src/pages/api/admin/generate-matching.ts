@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { generateBands } from '@/lib/matching'
 import { fetchMembersForMatching } from '@/lib/hooks'
 import type { Member } from '@/types/supabase'
+import { selectNonOverlappingBands } from '@/lib/selectNonOverlappingBands'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -15,15 +16,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // 既存のバンドとチャットルームを削除（必要に応じて）
-    await supabase.from('bands').delete().eq('event_id', event_id)
-    await supabase.from('chat_rooms').delete().eq('event_id', event_id)
-
+    // 1. メンバー取得
     const members: Member[] = await fetchMembersForMatching()
-    const bands = generateBands(members)
+    if (members.length < 6) return res.status(400).json({ error: '参加者が6人未満です' })
 
-    for (let i = 0; i < bands.length; i++) {
-      const band = bands[i]
+    // 2. バンド生成
+    const possiblebands = generateBands(members)
+    const finalbands = selectNonOverlappingBands(possiblebands)
+
+    // 3. DB挿入前にクリア（再実行時のため）
+      await supabase.from('bands').delete().eq('event_id', event_id)
+      await supabase.from('chat_rooms').delete().eq('event_id', event_id)
+      await supabase.from('chat_room_members')
+    .delete()
+    .in('chat_room_id',
+      (await supabase.from('chat_rooms').select('id').eq('event_id', event_id)).data?.map(r => r.id) ?? []
+    )
+    
+     // 4. 挿入ループ
+    for (let i = 0; i < finalbands.length; i++) {
+      const band = finalbands[i]
       const bandNumber = i + 1
 
       const { data: bandData, error: bandError } = await supabase

@@ -32,6 +32,7 @@ export const useAuth = () => {
   return { user, loading };
 };
 
+//メンバー情報をチェックするフック
 export async function fetchMembersForMatching(): Promise<Member[]> {
   const { data, error } = await supabase
     .from('users')
