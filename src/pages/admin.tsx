@@ -5,7 +5,7 @@ import type { Event } from '@/types/supabase'
 
 export default function AdminPage() {
   const [events, setEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loadingEventId, setLoadingEventId] = useState<string | null>(null)
   const [message, setMessage] = useState('')
   const router = useRouter()
 
@@ -31,8 +31,6 @@ export default function AdminPage() {
 
     init()
   }, [router])
-
-  const [loadingEventId, setLoadingEventId] = useState<string | null>(null)
 
   const handleSaveMatching = async (eventId: string) => {
     setLoadingEventId(eventId)
@@ -63,7 +61,7 @@ export default function AdminPage() {
             disabled={loadingEventId === event.id}
             className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
           >
-            {loading ? '保存中...' : '🚀 マッチングを保存 & 通知'}
+            {loadingEventId ? '保存中...' : '🚀 マッチングを保存 & 通知'}
           </button>
         </div>
       ))}
