@@ -33,19 +33,25 @@ export const useAuth = () => {
 };
 
 //メンバー情報をチェックするフック
-export async function fetchMembersForMatching(): Promise<Member[]> {
-  const { data, error } = await supabase
-    .from('users')
-    .select('id, part, university, experience_years, past_matched_ids')
+export async function fetchMembersForMatching(event_id: string): Promise<Member[]> {
+  const { data: participants } = await supabase
+  .from('event_participants')
+  .select('user_id')
+  .eq('event_id', event_id)
 
-  if (error) {
-    console.error('メンバー取得エラー:', error)
-    return []
-  }
+const userIds = participants?.map(p => p.user_id) ?? []
+
+// 2. users テーブルから詳細を取得
+const { data: users } = await supabase
+  .from('users')
+  .select('*')
+  .in('id', userIds)
+
+return users as Member[]
 
   const members: Member[] = []
 
-  data?.forEach((row) => {
+  users?.forEach((row) => {
     if (!row.part || !Array.isArray(row.part)) return
 
     for (const part of row.part as Part[]) {

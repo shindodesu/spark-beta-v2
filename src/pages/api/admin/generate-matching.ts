@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // 1. メンバー取得
-    const members: Member[] = await fetchMembersForMatching()
+    const members: Member[] = await fetchMembersForMatching(event_id)
     if (members.length < 6) return res.status(400).json({ error: '参加者が6人未満です' })
 
     // 2. バンド生成
