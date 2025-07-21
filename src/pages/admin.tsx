@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import type { Event } from '@/types/supabase'
 
-
 export default function AdminPage() {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(false)
@@ -33,8 +32,10 @@ export default function AdminPage() {
     init()
   }, [router])
 
+  const [loadingEventId, setLoadingEventId] = useState<string | null>(null)
+
   const handleSaveMatching = async (eventId: string) => {
-    setLoading(true)
+    setLoadingEventId(eventId)
     setMessage('')
     const res = await fetch('/api/admin/generate-matching', {
       method: 'POST',
@@ -47,7 +48,7 @@ export default function AdminPage() {
     } else {
       setMessage(`❌ エラー: ${data.error}`)
     }
-    setLoading(false)
+    setLoadingEventId(null)
   }
 
   return (
@@ -59,7 +60,7 @@ export default function AdminPage() {
           <p className="text-lg font-semibold mb-2">📅 {event.event_name}</p>
           <button
             onClick={() => handleSaveMatching(event.id)}
-            disabled={loading}
+            disabled={loadingEventId === event.id}
             className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
           >
             {loading ? '保存中...' : '🚀 マッチングを保存 & 通知'}
