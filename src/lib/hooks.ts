@@ -47,7 +47,6 @@ const { data: users } = await supabase
   .select('*')
   .in('id', userIds)
 
-return users as Member[]
 
   const members: Member[] = []
 
@@ -55,7 +54,7 @@ return users as Member[]
     if (!row.part || !Array.isArray(row.part)) return
 
     for (const part of row.part as Part[]) {
-      members.push({
+     members.push({
         id: row.id,
         part: [part],
         name : row .id,
