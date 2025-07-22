@@ -242,7 +242,7 @@ const HomePage: React.FC<HomeProps> = ({ events }) => {
               <span className="font-medium">応募人数:</span> {event.applicantsCount ?? 0} 人
             </p>
             <p className="text-sm mb-1">
-              <span className="font-medium">マッチ人数:</span> {event.matchedCount ?? 0} 人
+              <span className="font-medium">マッチバンド数:</span> {event.matchedCount ?? 0} 人
             </p>
             {event.description && (
               <p className="text-sm text-white/80 mt-2 mb-4">{event.description}</p>
@@ -347,7 +347,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
 
    // 手動で上書きするイベントIDと数を定義
   const manualStats: Record<string, { applicants: number; matched: number }> = {
-    'f67b0f74-59b6-4ec0-84d2-3cc7609e3fb9': { applicants: 40, matched: 12 }, // ←ここを実際のevent.idに
+    'f67b0f74-59b6-4ec0-84d2-3cc7609e3fb9': { applicants: 40, matched: 2 }, // ←ここを実際のevent.idに
   }
 
 
